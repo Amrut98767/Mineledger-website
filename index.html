@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MineChain | Blockchain Mining Data Storage</title>
+    <title>MineLedger - Blockchain Data Storage for Mining Industry</title>
+    <meta name="description" content="Enterprise-grade decentralized storage for mining data. Secure, scalable, immutable blockchain solutions.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js"></script>
 </head>
@@ -15,47 +16,55 @@
         <div class="nav-container">
             <div class="nav-logo">
                 <i class="fas fa-mountain"></i>
-                <span>MineChain</span>
+                <span>MineLedger</span>
             </div>
             <ul class="nav-menu">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#features">Features</a></li>
-                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#usecases">Use Cases</a></li>
                 <li><a href="#demo">Demo</a></li>
+                <li><a href="#integration">Integration</a></li>
                 <li><button class="btn-connect" onclick="initWeb3()" id="connectBtn">Connect Wallet</button></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section - 0g.ai Style -->
     <section id="home" class="hero">
         <div class="hero-container">
             <div class="hero-content">
-                <h1>Revolutionizing Mining Data with <span class="highlight">Blockchain</span></h1>
-                <p>Secure, transparent, and immutable storage for mining industry data using Ethereum blockchain technology.</p>
+                <h1>Decentralized Data Storage for <span class="highlight">Mining Industry</span></h1>
+                <p class="hero-subtitle">Secure, scalable, and immutable blockchain storage solutions for mining operations and compliance reporting.</p>
+                <div class="cta-buttons">
+                    <button class="btn-primary" onclick="scrollToDemo()">
+                        <i class="fas fa-rocket"></i> Live Demo
+                    </button>
+                    <button class="btn-secondary" onclick="scrollToIntegration()">
+                        <i class="fas fa-code"></i> View Documentation
+                    </button>
+                </div>
                 <div class="hero-stats">
                     <div class="stat">
-                        <h3>100%</h3>
-                        <p>Data Security</p>
+                        <div class="stat-number" id="totalTransactions">0</div>
+                        <div class="stat-label">Transactions</div>
                     </div>
                     <div class="stat">
-                        <h3>24/7</h3>
-                        <p>Accessibility</p>
+                        <div class="stat-number" id="totalData">0</div>
+                        <div class="stat-label">Data Records</div>
                     </div>
                     <div class="stat">
-                        <h3>0%</h3>
-                        <p>Data Loss</p>
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Uptime</div>
                     </div>
                 </div>
-                <button class="btn-primary" onclick="scrollToDemo()">Try Demo <i class="fas fa-arrow-down"></i></button>
             </div>
             <div class="hero-visual">
                 <div class="blockchain-animation">
-                    <div class="block">Block 1</div>
+                    <div class="block">Mine Data</div>
                     <div class="chain"></div>
-                    <div class="block">Block 2</div>
+                    <div class="block encrypted">Encrypted</div>
                     <div class="chain"></div>
-                    <div class="block">Block 3</div>
+                    <div class="block stored">On Blockchain</div>
                 </div>
             </div>
         </div>
@@ -64,51 +73,58 @@
     <!-- Features Section -->
     <section id="features" class="features">
         <div class="container">
-            <h2>Why Choose MineChain?</h2>
+            <h2>Why Choose MineLedger?</h2>
             <div class="features-grid">
                 <div class="feature-card">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>Immutable Records</h3>
-                    <p>Once stored, data cannot be altered or tampered with, ensuring complete integrity.</p>
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>High Performance</h3>
+                    <p>Lightning-fast data storage and retrieval with sub-second response times.</p>
                 </div>
                 <div class="feature-card">
-                    <i class="fas fa-bolt"></i>
-                    <h3>Instant Verification</h3>
-                    <p>Verify data authenticity instantly using cryptographic hashes.</p>
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Enterprise Security</h3>
+                    <p>Military-grade encryption and immutable blockchain storage for complete data integrity.</p>
                 </div>
                 <div class="feature-card">
-                    <i class="fas fa-globe"></i>
-                    <h3>Decentralized</h3>
-                    <p>No single point of failure - data is distributed across the blockchain network.</p>
+                    <div class="feature-icon">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <h3>Unlimited Scalability</h3>
+                    <p>From individual mines to enterprise operations - scale seamlessly as you grow.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- How It Works -->
-    <section id="how-it-works" class="how-it-works">
+    <!-- Use Cases Section -->
+    <section id="usecases" class="use-cases">
         <div class="container">
-            <h2>How It Works</h2>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Input Mining Data</h3>
-                    <p>Enter your mining operational data including mine details, ore specifications, and production metrics.</p>
+            <h2>Mining Industry Use Cases</h2>
+            <div class="use-cases-grid">
+                <div class="use-case-card">
+                    <div class="use-case-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h3>Production Records</h3>
+                    <p>Immutable storage of daily production data, output metrics, and operational reports.</p>
                 </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Generate Hash</h3>
-                    <p>Our system creates a unique cryptographic hash that represents your data securely.</p>
+                <div class="use-case-card">
+                    <div class="use-case-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>Quality Assurance</h3>
+                    <p>Tamper-proof ore quality certifications and laboratory test results.</p>
                 </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Store on Blockchain</h3>
-                    <p>Data is permanently stored on the Ethereum blockchain with timestamp and verification.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>Retrieve Anytime</h3>
-                    <p>Use your unique hash to retrieve and verify data anytime, anywhere.</p>
+                <div class="use-case-card">
+                    <div class="use-case-icon">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h3>Compliance Reporting</h3>
+                    <p>Automated regulatory compliance reports and audit trails for authorities.</p>
                 </div>
             </div>
         </div>
@@ -124,7 +140,6 @@
             </div>
             
             <div class="demo-grid">
-                <!-- Store Data Card -->
                 <div class="demo-card">
                     <div class="card-header">
                         <i class="fas fa-database"></i>
@@ -148,7 +163,6 @@
                     <div id="storageResult" class="result"></div>
                 </div>
 
-                <!-- Retrieve Data Card -->
                 <div class="demo-card">
                     <div class="card-header">
                         <i class="fas fa-search"></i>
@@ -167,14 +181,53 @@
         </div>
     </section>
 
+    <!-- Integration Section -->
+    <section id="integration" class="integration">
+        <div class="container">
+            <h2>Easy Integration</h2>
+            <div class="integration-content">
+                <div class="code-snippet">
+                    <h3>Store Mining Data</h3>
+                    <pre><code>// Store mining data on blockchain
+const hash = await contract.methods.storeMiningData(
+    "Golden Ore Mine", 
+    "High Grade", 
+    "Gold Ore"
+).send({ from: userAccount });
+
+// Retrieve data anytime
+const data = await contract.methods.getMiningData(hash).call();
+console.log(data); // ["Golden Ore Mine", "High Grade", "Gold Ore"]</code></pre>
+                </div>
+                <div class="tech-stack">
+                    <h3>Powered By</h3>
+                    <div class="tech-icons">
+                        <div class="tech-icon">
+                            <i class="fab fa-ethereum"></i>
+                            <span>Ethereum</span>
+                        </div>
+                        <div class="tech-icon">
+                            <i class="fas fa-link"></i>
+                            <span>Web3.js</span>
+                        </div>
+                        <div class="tech-icon">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Smart Contracts</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
                     <i class="fas fa-mountain"></i>
-                    <span>MineChain</span>
-                    <p>Blockchain-powered data storage for the mining industry</p>
+                    <span>MineLedger</span>
+                    <p>Blockchain-powered data storage for mining industry</p>
                 </div>
                 <div class="footer-links">
                     <a href="#"><i class="fab fa-github"></i></a>
@@ -183,7 +236,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 MineChain. Built for Mining Engineering Blockchain Project.</p>
+                <p>&copy; 2024 MineLedger. Built for Mining Engineering Blockchain Project.</p>
             </div>
         </div>
     </footer>
