@@ -1,435 +1,904 @@
-let web3;
-let contract;
-let userAccount;
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --secondary: #10b981;
+    --dark: #1f2937;
+    --darker: #111827;
+    --light: #f3f4f6;
+    --gray: #6b7280;
+    --success: #059669;
+    --warning: #d97706;
+    --error: #dc2626;
+    --border: #e5e7eb;
+}
 
-const CONTRACT_ADDRESS = "0xbCC791770d54C3Bc40d68a68b99dd9c64c3a18c7";
-const CONTRACT_ABI = [
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "string",
-                "name": "hash",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "mineName",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "oreGrade",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "oreType",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "storedBy",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "timestamp",
-                "type": "uint256"
-            }
-        ],
-        "name": "DataStored",
-        "type": "event"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "_hash",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_mineName",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_oreGrade",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_oreType",
-                "type": "string"
-            }
-        ],
-        "name": "storeMiningData",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "_hash",
-                "type": "string"
-            }
-        ],
-        "name": "getMiningData",
-        "outputs": [
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: var(--dark);
+    background: #f8fafc;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Navigation */
+.navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.nav-logo i {
+    color: var(--primary);
+    font-size: 1.8rem;
+}
+
+/* Desktop Menu */
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+    align-items: center;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: var(--dark);
+    font-weight: 500;
+    transition: color 0.3s;
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.nav-menu a:hover {
+    color: var(--primary);
+    background: var(--light);
+}
+
+/* Dropdown Menu */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    min-width: 220px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    color: var(--dark);
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.dropdown-content a:hover {
+    background: var(--light);
+}
+
+.coming-soon {
+    font-size: 0.75rem;
+    color: var(--gray);
+    background: var(--light);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+/* Mobile Menu */
+.mobile-menu-btn {
+    display: none;
+    font-size: 1.5rem;
+    color: var(--dark);
+    cursor: pointer;
+    padding: 8px;
+}
+
+.mobile-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    border-top: 1px solid var(--border);
+    z-index: 999;
+}
+
+.mobile-menu.active {
+    display: block;
+}
+
+.mobile-menu a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    color: var(--dark);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
+}
+
+.mobile-menu a:hover {
+    background: var(--light);
+}
+
+/* Connect Button */
+.btn-connect {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.btn-connect:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+/* Main Content */
+.main-content {
+    margin-top: 70px;
+    min-height: calc(100vh - 200px);
+}
+
+.content-section {
+    display: none;
+    padding: 40px 0;
+    animation: fadeIn 0.5s ease;
+}
+
+.content-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Section Header */
+.section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 10px;
+}
+
+.section-header p {
+    font-size: 1.1rem;
+    color: var(--gray);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-bottom: 50px;
+}
+
+.stat-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.stat-info h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 5px;
+}
+
+.stat-info p {
+    color: var(--gray);
+    font-weight: 500;
+}
+
+/* Quick Actions */
+.quick-actions {
+    margin-bottom: 50px;
+}
+
+.quick-actions h2 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    color: var(--dark);
+}
+
+.action-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.action-btn {
+    background: white;
+    border: 2px solid var(--border);
+    padding: 25px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--dark);
+}
+
+.action-btn:hover {
+    border-color: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.1);
+}
+
+.action-btn i {
+    font-size: 2rem;
+    color: var(--primary);
+}
+
+.action-btn span {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Recent Activity */
+.recent-activity {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+}
+
+.recent-activity h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--dark);
+}
+
+.activity-list {
+    min-height: 100px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: var(--light);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.activity-item i {
+    color: var(--primary);
+}
+
+.activity-item p {
+    margin: 0;
+    color: var(--dark);
+}
+
+/* Form Container */
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    border: 1px solid var(--border);
+}
+
+.connection-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding: 15px;
+    border-radius: 10px;
+    background: var(--light);
+    font-weight: 600;
+}
+
+.connection-status.connected {
+    background: #d1fae5;
+    color: var(--success);
+    border: 1px solid #a7f3d0;
+}
+
+.connection-status i {
+    font-size: 0.8rem;
+}
+
+/* Forms */
+.data-form {
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    font-family: inherit;
+    background: white;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Buttons */
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+}
+
+.btn-secondary {
+    background: var(--secondary);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+    background: #0da271;
+    transform: translateY(-2px);
+}
+
+.full-width {
+    width: 100%;
+}
+
+/* Search Box */
+.search-box {
+    margin-bottom: 30px;
+}
+
+/* Results */
+.result {
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 12px;
+    display: none;
+    animation: fadeIn 0.5s;
+    border-left: 4px solid;
+}
+
+.result.success {
+    background: #d1fae5;
+    border-left-color: var(--success);
+    color: var(--success);
+}
+
+.result.error {
+    background: #fef2f2;
+    border-left-color: var(--error);
+    color: var(--error);
+}
+
+.result.info {
+    background: #eff6ff;
+    border-left-color: var(--primary);
+    color: var(--primary);
+}
+
+.hash-display {
+    background: var(--darker);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    word-break: break-all;
+    font-family: 'Courier New', monospace;
+    margin: 10px 0;
+    border-left: 4px solid var(--primary);
+    font-size: 0.9rem;
+}
+
+/* History Container */
+.history-container {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+}
+
+.history-filters {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-group label {
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9rem;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 10px 12px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+/* Transactions Table */
+.transactions-table {
+    overflow-x: auto;
+}
+
+.transactions-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.transactions-table th {
+    background: var(--light);
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--dark);
+    border-bottom: 2px solid var(--border);
+}
+
+.transactions-table td {
+    padding: 15px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.transactions-table tr:hover {
+    background: var(--light);
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-success {
+    background: #d1fae5;
+    color: var(--success);
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: var(--warning);
+}
+
+.view-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.view-btn:hover {
+    background: var(--primary-dark);
+}
+
+.no-data {
+    text-align: center;
+    color: var(--gray);
+    font-style: italic;
+    padding: 40px !important;
+}
+
+/* Coming Soon Sections */
+.coming-soon-section {
+    text-align: center;
+    padding: 60px 40px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+}
+
+.coming-soon-section i {
+    font-size: 4rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.coming-soon-section h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: var(--dark);
+}
+
+.coming-soon-section p {
+    font-size: 1.1rem;
+    color: var(--gray);
+    max-width: 500px;
+    margin: 0 auto 30px;
+    line-height: 1.6;
+}
+
+.progress-container {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.progress-bar {
+    background: var(--light);
+    border-radius: 10px;
+    height: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+/* Team Section */
+.team-section {
+    background: var(--light);
+    padding: 80px 0;
+    margin-top: 50px;
+}
+
+.team-section h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    color: var(--dark);
+    font-weight: 700;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.team-member {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+    transition: transform 0.3s;
+}
+
+.team-member:hover {
+    transform: translateY(-5px);
+}
+
+.member-photo {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.member-photo i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.team-member h3 {
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+    color: var(--dark);
+}
+
+.team-member p {
+    color: var(--gray);
+    font-weight: 500;
+}
+
+/* Footer */
+.footer {
+    background: var(--darker);
+    color: white;
+    padding: 60px 0 20px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.footer-brand i {
+    color: var(--primary);
+}
+
+.footer-brand p {
+    margin-left: 10px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    font-weight: normal;
+}
+
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-links a {
+    color: white;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: var(--primary);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #374151;
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+/* Loading Animation */
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--primary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
     }
-];
-
-// Initialize Web3
-async function initWeb3() {
-    if (typeof window.ethereum !== 'undefined') {
-        web3 = new Web3(window.ethereum);
-        try {
-            const accounts = await window.ethereum.request({ 
-                method: 'eth_requestAccounts' 
-            });
-            userAccount = accounts[0];
-            
-            updateConnectionStatus(true, userAccount);
-            updateStats();
-            
-            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-            console.log("MineLedger: Contract initialized successfully");
-            
-            return true;
-        } catch (error) {
-            console.error("User denied account access", error);
-            updateConnectionStatus(false);
-            return false;
-        }
-    } else {
-        showNotification('Please install MetaMask to use MineLedger!', 'error');
-        updateConnectionStatus(false);
-        return false;
+    
+    .mobile-menu-btn {
+        display: block;
+    }
+    
+    .section-header h1 {
+        font-size: 2rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-container {
+        padding: 25px 20px;
+        margin: 0 10px;
+    }
+    
+    .history-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+    
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .transactions-table {
+        font-size: 0.8rem;
+    }
+    
+    .transactions-table th,
+    .transactions-table td {
+        padding: 10px 8px;
     }
 }
 
-// Update connection status UI
-function updateConnectionStatus(connected, account = null) {
-    const statusElement = document.getElementById('connectionStatus');
-    const connectBtn = document.getElementById('connectBtn');
+@media (max-width: 480px) {
+    .container {
+        padding: 0 15px;
+    }
     
-    if (connected && account) {
-        statusElement.innerHTML = `<i class="fas fa-circle" style="color: var(--success)"></i> Connected to MetaMask | ${account.substring(0, 8)}...${account.substring(36)}`;
-        statusElement.classList.add('connected');
-        connectBtn.textContent = 'Connected';
-        connectBtn.style.background = 'var(--success)';
-    } else {
-        statusElement.innerHTML = '<i class="fas fa-circle" style="color: var(--error)"></i> Disconnected from MetaMask';
-        statusElement.classList.remove('connected');
-        connectBtn.textContent = 'Connect Wallet';
-        connectBtn.style.background = 'var(--primary)';
+    .section-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .stat-card {
+        padding: 20px;
+    }
+    
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .stat-icon i {
+        font-size: 1.2rem;
+    }
+    
+    .stat-info h3 {
+        font-size: 1.5rem;
     }
 }
-
-// Update stats counter
-async function updateStats() {
-    // Simulate stats for demo - in real app, fetch from contract
-    const transactions = Math.floor(Math.random() * 100) + 50;
-    const dataRecords = Math.floor(Math.random() * 500) + 200;
-    
-    document.getElementById('totalTransactions').textContent = transactions;
-    document.getElementById('totalData').textContent = dataRecords;
-}
-
-// Store data on blockchain
-async function storeData() {
-    if (!contract) {
-        if (!await initWeb3()) return;
-    }
-
-    const mineName = document.getElementById('mineName').value.trim();
-    const oreGrade = document.getElementById('oreGrade').value.trim();
-    const oreType = document.getElementById('oreType').value.trim();
-
-    if (!mineName || !oreGrade || !oreType) {
-        showNotification('Please fill all fields!', 'error');
-        return;
-    }
-
-    try {
-        const resultDiv = document.getElementById('storageResult');
-        resultDiv.innerHTML = `
-            <div style="text-align: center; padding: 20px;">
-                <div class="loading-spinner"></div>
-                <p style="margin-top: 10px; color: var(--primary);">Storing data on blockchain...</p>
-            </div>
-        `;
-        resultDiv.style.display = 'block';
-
-        // Create unique hash
-        const dataString = mineName + oreGrade + oreType + Date.now() + userAccount;
-        const hash = web3.utils.keccak256(dataString);
-
-        // Store on blockchain
-        const receipt = await contract.methods.storeMiningData(hash, mineName, oreGrade, oreType)
-            .send({ from: userAccount });
-
-        // Show success
-        resultDiv.innerHTML = `
-            <div style="color: var(--success);">
-                <h4><i class="fas fa-check-circle"></i> Data Stored Successfully!</h4>
-                <p><strong>Your Unique Hash:</strong></p>
-                <div class="hash-display">${hash}</div>
-                <p><strong>Transaction Hash:</strong> ${receipt.transactionHash.substring(0, 20)}...</p>
-                <p style="color: var(--warning); margin-top: 15px; background: #fef3c7; padding: 10px; border-radius: 8px;">
-                    <i class="fas fa-exclamation-triangle"></i> 
-                    <strong>Save this hash carefully - you'll need it to retrieve data</strong>
-                </p>
-            </div>
-        `;
-
-        // Clear form
-        document.getElementById('mineName').value = '';
-        document.getElementById('oreGrade').value = '';
-        document.getElementById('oreType').value = '';
-
-        // Update stats
-        updateStats();
-        
-        showNotification('Data successfully stored on blockchain!', 'success');
-
-    } catch (error) {
-        console.error("Store data error:", error);
-        const resultDiv = document.getElementById('storageResult');
-        resultDiv.innerHTML = `
-            <div style="color: var(--error);">
-                <h4><i class="fas fa-times-circle"></i> Storage Failed</h4>
-                <p>Error: ${error.message}</p>
-                <p style="margin-top: 10px; font-size: 0.9rem;">Make sure you're on Sepolia testnet and have test ETH.</p>
-            </div>
-        `;
-        resultDiv.style.display = 'block';
-        showNotification('Failed to store data: ' + error.message, 'error');
-    }
-}
-
-// Retrieve data from blockchain
-async function retrieveData() {
-    if (!contract) {
-        if (!await initWeb3()) return;
-    }
-
-    const hash = document.getElementById('retrieveHash').value.trim();
-
-    if (!hash) {
-        showNotification('Please enter a hash!', 'error');
-        return;
-    }
-
-    // Validate hash format
-    if (!hash.startsWith('0x') || hash.length !== 66) {
-        showNotification('Please enter a valid transaction hash', 'error');
-        return;
-    }
-
-    try {
-        const resultDiv = document.getElementById('retrievalResult');
-        resultDiv.innerHTML = `
-            <div style="text-align: center; padding: 20px;">
-                <div class="loading-spinner"></div>
-                <p style="margin-top: 10px; color: var(--primary);">Retrieving data from blockchain...</p>
-            </div>
-        `;
-        resultDiv.style.display = 'block';
-
-        const result = await contract.methods.getMiningData(hash).call();
-        
-        const [mineName, oreGrade, oreType] = result;
-
-        if (!mineName && !oreGrade && !oreType) {
-            resultDiv.innerHTML = `
-                <div style="color: var(--error);">
-                    <h4><i class="fas fa-search"></i> Data Not Found</h4>
-                    <p>No mining data found for the provided hash.</p>
-                    <p style="margin-top: 10px; font-size: 0.9rem;">Please check the hash and try again.</p>
-                </div>
-            `;
-            return;
-        }
-
-        resultDiv.innerHTML = `
-            <div style="color: var(--success);">
-                <h4><i class="fas fa-check-circle"></i> Data Retrieved Successfully!</h4>
-                <div style="background: var(--light); padding: 20px; border-radius: 10px; margin-top: 15px; border-left: 4px solid var(--success);">
-                    <p><strong>🏔️ Mine Name:</strong> ${mineName || 'N/A'}</p>
-                    <p><strong>📊 Ore Grade:</strong> ${oreGrade || 'N/A'}</p>
-                    <p><strong>⚒️ Ore Type:</strong> ${oreType || 'N/A'}</p>
-                    <p><strong>🔑 Data Hash:</strong> ${hash}</p>
-                </div>
-            </div>
-        `;
-
-        showNotification('Data retrieved successfully!', 'success');
-
-    } catch (error) {
-        console.error("Retrieve data error:", error);
-        const resultDiv = document.getElementById('retrievalResult');
-        resultDiv.innerHTML = `
-            <div style="color: var(--error);">
-                <h4><i class="fas fa-times-circle"></i> Retrieval Failed</h4>
-                <p>Error: ${error.message}</p>
-                <p style="margin-top: 10px; font-size: 0.9rem;">Please check the hash and try again.</p>
-            </div>
-        `;
-        resultDiv.style.display = 'block';
-        showNotification('Failed to retrieve data: ' + error.message, 'error');
-    }
-}
-
-// Notification system
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 90px;
-        right: 20px;
-        padding: 15px 20px;
-        border-radius: 10px;
-        color: white;
-        font-weight: 600;
-        z-index: 10000;
-        animation: slideInRight 0.3s ease;
-        max-width: 400px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        border-left: 4px solid;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    `;
-    
-    const colors = {
-        success: '#10b981',
-        error: '#ef4444',
-        warning: '#f59e0b',
-        info: '#3b82f6'
-    };
-    
-    const icons = {
-        success: 'fa-check-circle',
-        error: 'fa-exclamation-triangle',
-        warning: 'fa-exclamation-circle',
-        info: 'fa-info-circle'
-    };
-    
-    notification.style.background = colors[type] || colors.info;
-    notification.style.borderLeftColor = colors[type] || colors.info;
-    
-    notification.innerHTML = `
-        <i class="fas ${icons[type]}" style="font-size: 1.2rem;"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Remove after 5 seconds
-    setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.3s ease';
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
-        }, 300);
-    }, 5000);
-}
-
-// Smooth scrolling
-function scrollToDemo() {
-    document.getElementById('demo').scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-    });
-}
-
-function scrollToIntegration() {
-    document.getElementById('integration').scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-    });
-}
-
-// Add CSS animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInRight {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    
-    @keyframes slideOutRight {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-    
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-`;
-document.head.appendChild(style);
-
-// Add scroll animations
-function initScrollAnimations() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.animation = `fadeInUp 0.6s ease forwards`;
-            }
-        });
-    }, { threshold: 0.1 });
-
-    // Observe all feature cards and use case cards
-    document.querySelectorAll('.feature-card, .use-case-card').forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        observer.observe(card);
-    });
-}
-
-// Initialize when page loads
-window.onload = function() {
-    // Auto-connect if MetaMask is already connected
-    if (typeof window.ethereum !== 'undefined') {
-        initWeb3();
-    }
-    
-    // Initialize stats
-    updateStats();
-    
-    // Initialize scroll animations
-    initScrollAnimations();
-    
-    console.log('MineLedger website initialized successfully!');
-};
