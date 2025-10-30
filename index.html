@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MineLedger - Blockchain Data Storage for Mining Industry</title>
+    <title>MineLedger - Blockchain Mining Data Storage</title>
     <meta name="description" content="Enterprise-grade decentralized storage for mining data. Secure, scalable, immutable blockchain solutions.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,203 +18,355 @@
                 <i class="fas fa-mountain"></i>
                 <span>MineLedger</span>
             </div>
+            
+            <!-- Desktop Menu -->
             <ul class="nav-menu">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#usecases">Use Cases</a></li>
-                <li><a href="#demo">Demo</a></li>
-                <li><a href="#integration">Integration</a></li>
+                <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
+                <li><a href="#" onclick="showSection('dataSubmission')">Data Submission</a></li>
+                <li><a href="#" onclick="showSection('dataReview')">Data Review</a></li>
+                <li><a href="#" onclick="showSection('transactionHistory')">Transaction History</a></li>
+                <li class="dropdown">
+                    <a href="#">More <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#" onclick="showSection('ipfsStorage')">IPFS Storage <span class="coming-soon">Coming Soon</span></a>
+                        <a href="#" onclick="showSection('billPayment')">Bill Payment <span class="coming-soon">Coming Soon</span></a>
+                    </div>
+                </li>
                 <li><button class="btn-connect" onclick="initWeb3()" id="connectBtn">Connect Wallet</button></li>
             </ul>
+
+            <!-- Mobile Menu Button -->
+            <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#" onclick="showSection('dashboard'); toggleMobileMenu();">Dashboard</a>
+            <a href="#" onclick="showSection('dataSubmission'); toggleMobileMenu();">Data Submission</a>
+            <a href="#" onclick="showSection('dataReview'); toggleMobileMenu();">Data Review</a>
+            <a href="#" onclick="showSection('transactionHistory'); toggleMobileMenu();">Transaction History</a>
+            <a href="#" onclick="showSection('ipfsStorage'); toggleMobileMenu();">
+                IPFS Storage <span class="coming-soon">Coming Soon</span>
+            </a>
+            <a href="#" onclick="showSection('billPayment'); toggleMobileMenu();">
+                Bill Payment <span class="coming-soon">Coming Soon</span>
+            </a>
         </div>
     </nav>
 
-    <!-- Hero Section - 0g.ai Style -->
-    <section id="home" class="hero">
-        <div class="hero-container">
-            <div class="hero-content">
-                <h1>Decentralized Data Storage for <span class="highlight">Mining Industry</span></h1>
-                <p class="hero-subtitle">Secure, scalable, and immutable blockchain storage solutions for mining operations and compliance reporting.</p>
-                <div class="cta-buttons">
-                    <button class="btn-primary" onclick="scrollToDemo()">
-                        <i class="fas fa-rocket"></i> Live Demo
-                    </button>
-                    <button class="btn-secondary" onclick="scrollToIntegration()">
-                        <i class="fas fa-code"></i> View Documentation
-                    </button>
+    <!-- Main Content Sections -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="content-section active">
+            <div class="container">
+                <div class="section-header">
+                    <h1>Dashboard Overview</h1>
+                    <p>Welcome to MineLedger - Your blockchain mining data storage solution</p>
                 </div>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <div class="stat-number" id="totalTransactions">0</div>
-                        <div class="stat-label">Transactions</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number" id="totalData">0</div>
-                        <div class="stat-label">Data Records</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">100%</div>
-                        <div class="stat-label">Uptime</div>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="blockchain-animation">
-                    <div class="block">Mine Data</div>
-                    <div class="chain"></div>
-                    <div class="block encrypted">Encrypted</div>
-                    <div class="chain"></div>
-                    <div class="block stored">On Blockchain</div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <div class="container">
-            <h2>Why Choose MineLedger?</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalTransactions">0</h3>
+                            <p>Total Transactions</p>
+                        </div>
                     </div>
-                    <h3>High Performance</h3>
-                    <p>Lightning-fast data storage and retrieval with sub-second response times.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="successfulTransactions">0</h3>
+                            <p>Successful Transactions</p>
+                        </div>
                     </div>
-                    <h3>Enterprise Security</h3>
-                    <p>Military-grade encryption and immutable blockchain storage for complete data integrity.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-infinity"></i>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="uptimePercentage">100%</h3>
+                            <p>System Uptime</p>
+                        </div>
                     </div>
-                    <h3>Unlimited Scalability</h3>
-                    <p>From individual mines to enterprise operations - scale seamlessly as you grow.</p>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="activeUsers">1</h3>
+                            <p>Active Users</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Use Cases Section -->
-    <section id="usecases" class="use-cases">
-        <div class="container">
-            <h2>Mining Industry Use Cases</h2>
-            <div class="use-cases-grid">
-                <div class="use-case-card">
-                    <div class="use-case-icon">
-                        <i class="fas fa-clipboard-list"></i>
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="showSection('dataSubmission')">
+                            <i class="fas fa-upload"></i>
+                            <span>Submit New Data</span>
+                        </button>
+                        <button class="action-btn" onclick="showSection('dataReview')">
+                            <i class="fas fa-search"></i>
+                            <span>Review Data</span>
+                        </button>
+                        <button class="action-btn" onclick="showSection('transactionHistory')">
+                            <i class="fas fa-history"></i>
+                            <span>View History</span>
+                        </button>
                     </div>
-                    <h3>Production Records</h3>
-                    <p>Immutable storage of daily production data, output metrics, and operational reports.</p>
                 </div>
-                <div class="use-case-card">
-                    <div class="use-case-icon">
-                        <i class="fas fa-gem"></i>
-                    </div>
-                    <h3>Quality Assurance</h3>
-                    <p>Tamper-proof ore quality certifications and laboratory test results.</p>
-                </div>
-                <div class="use-case-card">
-                    <div class="use-case-icon">
-                        <i class="fas fa-file-contract"></i>
-                    </div>
-                    <h3>Compliance Reporting</h3>
-                    <p>Automated regulatory compliance reports and audit trails for authorities.</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Demo Section -->
-    <section id="demo" class="demo">
-        <div class="container">
-            <h2>Live Demo</h2>
-            <div class="connection-status" id="connectionStatus">
-                <i class="fas fa-circle"></i>
-                <span>Disconnected from MetaMask</span>
+                <!-- Recent Activity -->
+                <div class="recent-activity">
+                    <h2>Recent Activity</h2>
+                    <div class="activity-list" id="recentActivity">
+                        <div class="activity-item">
+                            <i class="fas fa-info-circle"></i>
+                            <p>No recent transactions yet. Submit your first mining data!</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="demo-grid">
-                <div class="demo-card">
-                    <div class="card-header">
-                        <i class="fas fa-database"></i>
-                        <h3>Store Mining Data</h3>
+        </section>
+
+        <!-- Data Submission Section -->
+        <section id="dataSubmission" class="content-section">
+            <div class="container">
+                <div class="section-header">
+                    <h1>Submit Mining Data</h1>
+                    <p>Store your mining data securely on the blockchain</p>
+                </div>
+
+                <div class="form-container">
+                    <div class="connection-status" id="connectionStatus">
+                        <i class="fas fa-circle"></i>
+                        <span>Disconnected from MetaMask</span>
                     </div>
-                    <div class="form-group">
-                        <label for="mineName"><i class="fas fa-mountain"></i> Mine Name</label>
-                        <input type="text" id="mineName" placeholder="e.g., Coal Mine A, Iron Ore Site B">
-                    </div>
-                    <div class="form-group">
-                        <label for="oreGrade"><i class="fas fa-gem"></i> Ore Grade</label>
-                        <input type="text" id="oreGrade" placeholder="e.g., High Grade, Medium Grade">
-                    </div>
-                    <div class="form-group">
-                        <label for="oreType"><i class="fas fa-hard-hat"></i> Ore Type</label>
-                        <input type="text" id="oreType" placeholder="e.g., Iron Ore, Coal, Copper">
-                    </div>
-                    <button onclick="storeData()" class="btn-primary full-width">
-                        <i class="fas fa-cloud-upload-alt"></i> Store on Blockchain
-                    </button>
+
+                    <form class="data-form" onsubmit="event.preventDefault(); storeData();">
+                        <div class="form-group">
+                            <label for="mineName">
+                                <i class="fas fa-mountain"></i>
+                                Mine Name
+                            </label>
+                            <input type="text" id="mineName" placeholder="e.g., Coal Mine A, Iron Ore Site B" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="oreGrade">
+                                <i class="fas fa-gem"></i>
+                                Ore Grade
+                            </label>
+                            <select id="oreGrade" required>
+                                <option value="">Select Grade</option>
+                                <option value="High Grade">High Grade</option>
+                                <option value="Medium Grade">Medium Grade</option>
+                                <option value="Low Grade">Low Grade</option>
+                                <option value="Premium">Premium</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="oreType">
+                                <i class="fas fa-hard-hat"></i>
+                                Ore Type
+                            </label>
+                            <select id="oreType" required>
+                                <option value="">Select Type</option>
+                                <option value="Iron Ore">Iron Ore</option>
+                                <option value="Coal">Coal</option>
+                                <option value="Copper">Copper</option>
+                                <option value="Gold">Gold</option>
+                                <option value="Silver">Silver</option>
+                                <option value="Bauxite">Bauxite</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productionDate">
+                                <i class="fas fa-calendar"></i>
+                                Production Date
+                            </label>
+                            <input type="date" id="productionDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quantity">
+                                <i class="fas fa-weight"></i>
+                                Quantity (tons)
+                            </label>
+                            <input type="number" id="quantity" placeholder="e.g., 150" step="0.1" required>
+                        </div>
+
+                        <button type="submit" class="btn-primary full-width">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            Store on Blockchain
+                        </button>
+                    </form>
+
                     <div id="storageResult" class="result"></div>
                 </div>
+            </div>
+        </section>
 
-                <div class="demo-card">
-                    <div class="card-header">
-                        <i class="fas fa-search"></i>
-                        <h3>Retrieve Mining Data</h3>
+        <!-- Data Review Section -->
+        <section id="dataReview" class="content-section">
+            <div class="container">
+                <div class="section-header">
+                    <h1>Review Mining Data</h1>
+                    <p>Retrieve and verify your stored mining data using transaction hash</p>
+                </div>
+
+                <div class="form-container">
+                    <div class="search-box">
+                        <div class="form-group">
+                            <label for="retrieveHash">
+                                <i class="fas fa-hashtag"></i>
+                                Enter Transaction Hash
+                            </label>
+                            <input type="text" id="retrieveHash" placeholder="Paste your transaction hash starting with 0x...">
+                        </div>
+                        <button onclick="retrieveData()" class="btn-primary full-width">
+                            <i class="fas fa-download"></i>
+                            Retrieve Data
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label for="retrieveHash"><i class="fas fa-hashtag"></i> Enter Hash</label>
-                        <input type="text" id="retrieveHash" placeholder="Paste your transaction hash here">
-                    </div>
-                    <button onclick="retrieveData()" class="btn-secondary full-width">
-                        <i class="fas fa-download"></i> Retrieve Data
-                    </button>
+
                     <div id="retrievalResult" class="result"></div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Integration Section -->
-    <section id="integration" class="integration">
-        <div class="container">
-            <h2>Easy Integration</h2>
-            <div class="integration-content">
-                <div class="code-snippet">
-                    <h3>Store Mining Data</h3>
-                    <pre><code>// Store mining data on blockchain
-const hash = await contract.methods.storeMiningData(
-    "Golden Ore Mine", 
-    "High Grade", 
-    "Gold Ore"
-).send({ from: userAccount });
-
-// Retrieve data anytime
-const data = await contract.methods.getMiningData(hash).call();
-console.log(data); // ["Golden Ore Mine", "High Grade", "Gold Ore"]</code></pre>
+        <!-- Transaction History Section -->
+        <section id="transactionHistory" class="content-section">
+            <div class="container">
+                <div class="section-header">
+                    <h1>Transaction History</h1>
+                    <p>View all your blockchain transactions and access stored data</p>
                 </div>
-                <div class="tech-stack">
-                    <h3>Powered By</h3>
-                    <div class="tech-icons">
-                        <div class="tech-icon">
-                            <i class="fab fa-ethereum"></i>
-                            <span>Ethereum</span>
+
+                <div class="history-container">
+                    <div class="history-filters">
+                        <div class="filter-group">
+                            <label for="filterDate">Filter by Date:</label>
+                            <input type="date" id="filterDate">
                         </div>
-                        <div class="tech-icon">
-                            <i class="fas fa-link"></i>
-                            <span>Web3.js</span>
+                        <div class="filter-group">
+                            <label for="filterMine">Filter by Mine:</label>
+                            <select id="filterMine">
+                                <option value="">All Mines</option>
+                            </select>
                         </div>
-                        <div class="tech-icon">
-                            <i class="fas fa-shield-alt"></i>
-                            <span>Smart Contracts</span>
-                        </div>
+                        <button onclick="clearFilters()" class="btn-secondary">Clear Filters</button>
                     </div>
+
+                    <div class="transactions-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Transaction Hash</th>
+                                    <th>Mine Name</th>
+                                    <th>Ore Type</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsList">
+                                <tr>
+                                    <td colspan="6" class="no-data">No transactions found</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- IPFS Storage Section -->
+        <section id="ipfsStorage" class="content-section">
+            <div class="container">
+                <div class="section-header">
+                    <h1>IPFS Storage</h1>
+                    <p>Decentralized file storage coming soon</p>
+                </div>
+                <div class="coming-soon-section">
+                    <i class="fas fa-tools"></i>
+                    <h2>Feature Under Development</h2>
+                    <p>We're working on integrating IPFS for decentralized file storage. This feature will allow you to store large mining files securely on the distributed web.</p>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                        <span>45% Complete</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bill Payment Section -->
+        <section id="billPayment" class="content-section">
+            <div class="container">
+                <div class="section-header">
+                    <h1>Bill Payment</h1>
+                    <p>Secure payment processing coming soon</p>
+                </div>
+                <div class="coming-soon-section">
+                    <i class="fas fa-credit-card"></i>
+                    <h2>Payment System in Progress</h2>
+                    <p>We're implementing a secure payment gateway for processing mining service bills and subscriptions.</p>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 30%"></div>
+                        </div>
+                        <span>30% Complete</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <div class="container">
+            <h2>Our Team</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-photo">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>John Smith</h3>
+                    <p>Blockchain Developer</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-photo">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>Sarah Johnson</h3>
+                    <p>Mining Engineer</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-photo">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>Mike Chen</h3>
+                    <p>Full Stack Developer</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-photo">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>Emily Davis</h3>
+                    <p>UI/UX Designer</p>
                 </div>
             </div>
         </div>
