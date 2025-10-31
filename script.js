@@ -149,7 +149,13 @@ function updateConnectionStatus(connected, account = null) {
     const connectBtn = document.getElementById('connectBtn');
     
     if (connected && account) {
-        statusElement.innerHTML = `<i class="fas fa-circle" style="color: var(--success)"></i> Connected | ${account.substring(0, 6)}...${account.substring(38)}`;
+        statusElement.innerHTML = `
+            <i class="fas fa-circle" style="color: var(--success)"></i> 
+            Connected | ${account.substring(0, 6)}...${account.substring(38)}
+            <button onclick="disconnectWallet()" class="btn-disconnect">
+                <i class="fas fa-power-off"></i> Disconnect
+            </button>
+        `;
         statusElement.classList.add('connected');
         connectBtn.textContent = 'Connected';
         connectBtn.style.background = 'var(--success)';
@@ -675,3 +681,38 @@ function initTeamAnimation() {
 
 // Initialize team animation when page loads
 window.addEventListener('load', initTeamAnimation);
+// Wallet disconnect function
+function disconnectWallet() {
+    userAccount = null;
+    updateConnectionStatus(false);
+    showNotification('Wallet disconnected successfully', 'info');
+    
+    // Clear any wallet-related data
+    localStorage.removeItem('connectedWallet');
+}
+
+// Back button functionality
+function goBack() {
+    const currentSection = document.querySelector('.content-section.active');
+    const currentSectionId = currentSection.id;
+    
+    // Define navigation flow
+    const navigationFlow = {
+        'dataSubmission': 'dashboard',
+        'dataReview': 'dashboard', 
+        'transactionHistory': 'dashboard',
+        'ipfsStorage': 'dashboard',
+        'billPayment': 'dashboard'
+    };
+    
+    const previousSection = navigationFlow[currentSectionId] || 'dashboard';
+    showSection(previousSection);
+}
+
+// Browser back button handle karo
+window.addEventListener('popstate', function(event) {
+    const currentSection = document.querySelector('.content-section.active');
+    if (currentSection && currentSection.id !== 'dashboard') {
+        showSection('dashboard');
+    }
+});
