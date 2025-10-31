@@ -1,75 +1,25 @@
-let web3;
-let contract;
-let userAccount;
-
-// Contract details
-const CONTRACT_ADDRESS = "0xbCC791770d54C3Bc40d68a68b99dd9c64c3a18c7";
+// Contract Configuration
+const CONTRACT_ADDRESS = "0xeE406ABd76B883F874E6525a00cD6990073f7AeF";
 const CONTRACT_ABI = [
     {
         "anonymous": false,
         "inputs": [
-            {
-                "indexed": true,
-                "internalType": "string",
-                "name": "hash",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "mineName",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "oreGrade",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "oreType",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "storedBy",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "timestamp",
-                "type": "uint256"
-            }
+            {"indexed": true, "internalType": "string", "name": "hash", "type": "string"},
+            {"indexed": false, "internalType": "string", "name": "mineName", "type": "string"},
+            {"indexed": false, "internalType": "string", "name": "oreGrade", "type": "string"},
+            {"indexed": false, "internalType": "string", "name": "oreType", "type": "string"},
+            {"indexed": false, "internalType": "address", "name": "storedBy", "type": "address"},
+            {"indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256"}
         ],
         "name": "DataStored",
         "type": "event"
     },
     {
         "inputs": [
-            {
-                "internalType": "string",
-                "name": "_hash",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_mineName",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_oreGrade",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_oreType",
-                "type": "string"
-            }
+            {"internalType": "string", "name": "_hash", "type": "string"},
+            {"internalType": "string", "name": "_mineName", "type": "string"},
+            {"internalType": "string", "name": "_oreGrade", "type": "string"},
+            {"internalType": "string", "name": "_oreType", "type": "string"}
         ],
         "name": "storeMiningData",
         "outputs": [],
@@ -77,225 +27,157 @@ const CONTRACT_ABI = [
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "_hash",
-                "type": "string"
-            }
-        ],
+        "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+        "name": "allHashes",
+        "outputs": [{"internalType": "string", "name": "", "type": "string"}],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [{"internalType": "string", "name": "_hash", "type": "string"}],
         "name": "getMiningData",
         "outputs": [
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }
+            {"internalType": "string", "name": "", "type": "string"},
+            {"internalType": "string", "name": "", "type": "string"},
+            {"internalType": "string", "name": "", "type": "string"}
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getTotalStoredData",
+        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [{"internalType": "string", "name": "", "type": "string"}],
+        "name": "hashToMiningData",
+        "outputs": [
+            {"internalType": "string", "name": "mineName", "type": "string"},
+            {"internalType": "string", "name": "oreGrade", "type": "string"},
+            {"internalType": "string", "name": "oreType", "type": "string"},
+            {"internalType": "uint256", "name": "timestamp", "type": "uint256"},
+            {"internalType": "address", "name": "storedBy", "type": "address"}
         ],
         "stateMutability": "view",
         "type": "function"
     }
 ];
 
-// Transaction storage
-let transactionHistory = JSON.parse(localStorage.getItem('mineLedgerTransactions')) || [];
-let successfulTransactions = parseInt(localStorage.getItem('successfulTransactions')) || 0;
+let contract;
+let web3;
 
-// Initialize Web3
+// Initialize Web3 and Contract
 async function initWeb3() {
-    if (typeof window.ethereum !== 'undefined') {
-        web3 = new Web3(window.ethereum);
-        try {
-            const accounts = await window.ethereum.request({ 
-                method: 'eth_requestAccounts' 
-            });
-            userAccount = accounts[0];
-            
-            updateConnectionStatus(true, userAccount);
-            updateDashboardStats();
-            loadTransactionHistory();
-            
-            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-            console.log("MineLedger: Contract initialized successfully");
-            
-            showNotification('Wallet connected successfully!', 'success');
-            return true;
-        } catch (error) {
-            console.error("User denied account access", error);
-            updateConnectionStatus(false);
-            showNotification('Failed to connect wallet', 'error');
-            return false;
-        }
-    } else {
-        showNotification('Please install MetaMask to use MineLedger!', 'error');
-        updateConnectionStatus(false);
-        return false;
-    }
-}
-
-// Update connection status UI
-function updateConnectionStatus(connected, account = null) {
-    const statusElement = document.getElementById('connectionStatus');
-    const connectBtn = document.getElementById('connectBtn');
-    const walletInfo = document.getElementById('walletInfo');
-    const walletAddress = document.getElementById('walletAddress');
-    
-    if (connected && account) {
-        // Navigation mein wallet info show karo
-        walletInfo.style.display = 'flex';
-        connectBtn.style.display = 'none';
-        walletAddress.textContent = `${account.substring(0, 6)}...${account.substring(38)}`;
-        
-        // Pages mein connection status update karo (agar element exist karta hai)
-        if (statusElement) {
-            statusElement.innerHTML = `
-                <i class="fas fa-circle" style="color: var(--success)"></i>
-                <span>Connected | ${account.substring(0, 6)}...${account.substring(38)}</span>
-            `;
-            statusElement.classList.add('connected');
-        }
-        
-    } else {
-        // Navigation mein connect button show karo
-        walletInfo.style.display = 'none';
-        connectBtn.style.display = 'block';
-        
-        // Pages mein connection status update karo (agar element exist karta hai)
-        if (statusElement) {
-            statusElement.innerHTML = '<i class="fas fa-circle" style="color: var(--error)"></i> Disconnected from MetaMask';
-            statusElement.classList.remove('connected');
-        }
-    }
-}
-// Update dashboard statistics
-function updateDashboardStats() {
-    document.getElementById('totalTransactions').textContent = transactionHistory.length;
-    document.getElementById('successfulTransactions').textContent = successfulTransactions;
-    document.getElementById('uptimePercentage').textContent = '100%';
-    document.getElementById('activeUsers').textContent = '1';
-    
-    updateRecentActivity();
-}
-
-// Update recent activity
-function updateRecentActivity() {
-    const activityList = document.getElementById('recentActivity');
-    
-    if (transactionHistory.length === 0) {
-        activityList.innerHTML = `
-            <div class="activity-item">
-                <i class="fas fa-info-circle"></i>
-                <p>No recent transactions yet. Submit your first mining data!</p>
-            </div>
-        `;
-        return;
-    }
-    
-    const recentTransactions = transactionHistory.slice(-5).reverse();
-    activityList.innerHTML = recentTransactions.map(transaction => `
-        <div class="activity-item">
-            <i class="fas fa-database" style="color: var(--success)"></i>
-            <div>
-                <p><strong>${transaction.mineName}</strong> - ${transaction.oreType}</p>
-                <small>${new Date(transaction.timestamp).toLocaleString()}</small>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Store data on blockchain
-async function storeData() {
-    if (!contract) {
-        if (!await initWeb3()) return;
-    }
-
-    const mineName = document.getElementById('mineName').value.trim();
-    const oreGrade = document.getElementById('oreGrade').value;
-    const oreType = document.getElementById('oreType').value;
-    const productionDate = document.getElementById('productionDate').value;
-    const quantity = document.getElementById('quantity').value;
-
-    if (!mineName || !oreGrade || !oreType || !productionDate || !quantity) {
-        showNotification('Please fill all fields!', 'error');
-        return;
-    }
-
     try {
+        if (window.ethereum) {
+            web3 = new Web3(window.ethereum);
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            
+            // Initialize contract
+            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+            
+            // Update connection status
+            document.getElementById('connectionStatus').innerHTML = 
+                '<i class="fas fa-circle" style="color: #4CAF50;"></i> Connected to MetaMask';
+            
+            // Update wallet info
+            const accounts = await web3.eth.getAccounts();
+            const shortAddress = accounts[0].substring(0, 6) + '...' + accounts[0].substring(38);
+            document.getElementById('walletAddress').textContent = shortAddress;
+            document.getElementById('walletInfo').style.display = 'block';
+            document.getElementById('connectBtn').style.display = 'none';
+            
+            // Load real data from blockchain
+            updateDashboardStats();
+            updateTransactionHistory();
+            
+            console.log('Connected to contract:', contract);
+            
+        } else {
+            alert('Please install MetaMask!');
+        }
+    } catch (error) {
+        console.error('Error initializing Web3:', error);
+        alert('Error connecting to MetaMask: ' + error.message);
+    }
+}
+
+// Store data on actual blockchain
+async function storeData() {
+    try {
+        const mineName = document.getElementById('mineName').value;
+        const oreGrade = document.getElementById('oreGrade').value;
+        const oreType = document.getElementById('oreType').value;
+        const productionDate = document.getElementById('productionDate').value;
+        const quantity = document.getElementById('quantity').value;
+
+        if (!web3 || !contract) {
+            alert('Please connect MetaMask first!');
+            return;
+        }
+
         const resultDiv = document.getElementById('storageResult');
-        resultDiv.innerHTML = `
-            <div style="text-align: center; padding: 20px;">
-                <div class="loading-spinner"></div>
-                <p style="margin-top: 10px; color: var(--primary);">Storing data on blockchain...</p>
-                <p style="font-size: 0.9rem; color: var(--gray);">This may take a few seconds</p>
-            </div>
-        `;
-        resultDiv.className = 'result info';
-        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Storing on blockchain...</div>';
 
-        // Create unique hash
-        const dataString = mineName + oreGrade + oreType + productionDate + quantity + Date.now() + userAccount;
-        const hash = web3.utils.keccak256(dataString);
-
-        // Store on blockchain
-        const receipt = await contract.methods.storeMiningData(hash, mineName, oreGrade, oreType)
-            .send({ from: userAccount });
-
-        // Add to transaction history
-        const transaction = {
-            hash: hash,
-            mineName: mineName,
-            oreGrade: oreGrade,
-            oreType: oreType,
-            productionDate: productionDate,
-            quantity: quantity,
-            timestamp: Date.now(),
-            transactionHash: receipt.transactionHash,
-            status: 'success',
-            blockNumber: receipt.blockNumber
-        };
+        const accounts = await web3.eth.getAccounts();
         
-        transactionHistory.push(transaction);
-        successfulTransactions++;
+        // Generate unique hash for this data
+        const dataHash = web3.utils.sha3(mineName + oreGrade + oreType + productionDate + quantity + Date.now());
         
-        // Save to localStorage
-        localStorage.setItem('mineLedgerTransactions', JSON.stringify(transactionHistory));
-        localStorage.setItem('successfulTransactions', successfulTransactions.toString());
+        // Store on actual blockchain
+        const transaction = await contract.methods.storeMiningData(
+            dataHash,
+            mineName,
+            oreGrade,
+            oreType
+        ).send({ from: accounts[0] });
 
-        // Show success
+        // Show success with actual transaction hash
         resultDiv.innerHTML = `
-            <div style="color: var(--success);">
-                <h4><i class="fas fa-check-circle"></i> Data Stored Successfully!</h4>
-                <p><strong>Transaction Details:</strong></p>
-                <div style="background: rgba(16, 185, 129, 0.1); padding: 15px; border-radius: 8px; margin: 10px 0;">
-                    <p><strong>Mine:</strong> ${mineName}</p>
-                    <p><strong>Ore Type:</strong> ${oreType} (${oreGrade})</p>
-                    <p><strong>Quantity:</strong> ${quantity} tons</p>
-                    <p><strong>Date:</strong> ${new Date(productionDate).toLocaleDateString()}</p>
+            <div class="success">
+                <i class="fas fa-check-circle"></i> Data Stored on Blockchain Successfully!
+                <div class="transaction-hash">
+                    <strong>Transaction Hash:</strong> 
+                    <span onclick="copyToClipboard('${transaction.transactionHash}')" style="cursor: pointer;">
+                        ${transaction.transactionHash.substring(0, 10)}...${transaction.transactionHash.substring(58)}
+                    </span>
+                    <button onclick="copyToClipboard('${transaction.transactionHash}')" class="btn-copy">
+                        <i class="fas fa-copy"></i>
+                    </button>
                 </div>
-                <p><strong>Your Unique Hash:</strong></p>
-                <div class="hash-display">${hash}</div>
-                <p><strong>Transaction Hash:</strong> ${receipt.transactionHash.substring(0, 20)}...</p>
-                <p style="color: var(--warning); margin-top: 15px; background: #fef3c7; padding: 10px; border-radius: 8px;">
-                    <i class="fas fa-exclamation-triangle"></i> 
-                    <strong>Save this hash to retrieve data later</strong>
-                </p>
-                <button onclick="copyToClipboard('${hash}')" class="btn-secondary" style="margin-top: 10px;">
-                    <i class="fas fa-copy"></i> Copy Hash
-                </button>
+                <div class="transaction-hash">
+                    <strong>Data Hash:</strong> 
+                    <span onclick="copyToClipboard('${dataHash}')" style="cursor: pointer;">
+                        ${dataHash.substring(0, 10)}...${dataHash.substring(58)}
+                    </span>
+                    <button onclick="copyToClipboard('${dataHash}')" class="btn-copy">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                <p>Your mining data has been securely stored on the blockchain.</p>
             </div>
         `;
-        resultDiv.className = 'result success';
 
+        // Store in localStorage for quick access
+        saveTransactionToLocalStorage({
+            mineName,
+            oreGrade,
+            oreType,
+            productionDate,
+            quantity,
+            dataHash,
+            transactionHash: transaction.transactionHash,
+            timestamp: Date.now(),
+            from: accounts[0]
+        });
+
+        // Update dashboard with real data
+        updateDashboardStats();
+        updateTransactionHistory();
+        
         // Clear form
         document.getElementById('mineName').value = '';
         document.getElementById('oreGrade').value = '';
@@ -303,459 +185,158 @@ async function storeData() {
         document.getElementById('productionDate').value = '';
         document.getElementById('quantity').value = '';
 
-        // Update dashboard
-        updateDashboardStats();
-        loadTransactionHistory();
-        
-        showNotification('Data successfully stored on blockchain!', 'success');
-
     } catch (error) {
-        console.error("Store data error:", error);
-        const resultDiv = document.getElementById('storageResult');
-        resultDiv.innerHTML = `
-            <div style="color: var(--error);">
-                <h4><i class="fas fa-times-circle"></i> Storage Failed</h4>
-                <p>Error: ${error.message}</p>
-                <p style="margin-top: 10px; font-size: 0.9rem;">Make sure you're on Sepolia testnet and have test ETH.</p>
+        console.error('Storage error:', error);
+        document.getElementById('storageResult').innerHTML = `
+            <div class="error">
+                <i class="fas fa-exclamation-triangle"></i> Blockchain Storage Failed
+                <p>${error.message}</p>
             </div>
         `;
-        resultDiv.className = 'result error';
-        resultDiv.style.display = 'block';
-        showNotification('Failed to store data: ' + error.message, 'error');
     }
 }
 
-// Retrieve data from blockchain
+// Retrieve data from actual blockchain
 async function retrieveData() {
-    if (!contract) {
-        if (!await initWeb3()) return;
-    }
-
     const hash = document.getElementById('retrieveHash').value.trim();
-
+    const resultDiv = document.getElementById('retrievalResult');
+    
     if (!hash) {
-        showNotification('Please enter a hash!', 'error');
-        return;
-    }
-
-    // Validate hash format
-    if (!hash.startsWith('0x') || hash.length !== 66) {
-        showNotification('Please enter a valid transaction hash (should start with 0x and be 66 characters long)', 'error');
+        resultDiv.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i> Please enter a data hash</div>';
         return;
     }
 
     try {
-        const resultDiv = document.getElementById('retrievalResult');
-        resultDiv.innerHTML = `
-            <div style="text-align: center; padding: 20px;">
-                <div class="loading-spinner"></div>
-                <p style="margin-top: 10px; color: var(--primary);">Retrieving data from blockchain...</p>
-            </div>
-        `;
-        resultDiv.className = 'result info';
-        resultDiv.style.display = 'block';
-
-        const result = await contract.methods.getMiningData(hash).call();
+        resultDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Retrieving data from blockchain...</div>';
         
-        const [mineName, oreGrade, oreType] = result;
-
-        // Check if data exists
-        if (!mineName && !oreGrade && !oreType) {
-            resultDiv.innerHTML = `
-                <div style="color: var(--error);">
-                    <h4><i class="fas fa-search"></i> Data Not Found</h4>
-                    <p>No mining data found for the provided hash.</p>
-                    <p style="margin-top: 10px; font-size: 0.9rem;">Please check the hash and try again.</p>
-                </div>
-            `;
-            resultDiv.className = 'result error';
+        // Get data from actual blockchain contract
+        const data = await contract.methods.getMiningData(hash).call();
+        
+        if (data[0] === "" && data[1] === "" && data[2] === "") {
+            resultDiv.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i> Data not found on blockchain</div>';
             return;
         }
 
-        // Find transaction details from history
-        const transaction = transactionHistory.find(tx => tx.hash === hash);
+        // Get additional details from mapping
+        const fullData = await contract.methods.hashToMiningData(hash).call();
         
         resultDiv.innerHTML = `
-            <div style="color: var(--success);">
-                <h4><i class="fas fa-check-circle"></i> Data Retrieved Successfully!</h4>
-                <div style="background: rgba(16, 185, 129, 0.1); padding: 20px; border-radius: 10px; margin-top: 15px; border-left: 4px solid var(--success);">
-                    <p><strong>🏔️ Mine Name:</strong> ${mineName || 'N/A'}</p>
-                    <p><strong>📊 Ore Grade:</strong> ${oreGrade || 'N/A'}</p>
-                    <p><strong>⚒️ Ore Type:</strong> ${oreType || 'N/A'}</p>
-                    ${transaction ? `
-                        <p><strong>📅 Production Date:</strong> ${new Date(transaction.productionDate).toLocaleDateString()}</p>
-                        <p><strong>⚖️ Quantity:</strong> ${transaction.quantity} tons</p>
-                        <p><strong>🕒 Stored On:</strong> ${new Date(transaction.timestamp).toLocaleString()}</p>
-                    ` : ''}
-                    <p><strong>🔑 Data Hash:</strong> ${hash}</p>
+            <div class="success">
+                <i class="fas fa-check-circle"></i> Data Retrieved Successfully!
+                <div class="transaction-details">
+                    <p><strong>Mine Name:</strong> ${data[0]}</p>
+                    <p><strong>Ore Grade:</strong> ${data[1]}</p>
+                    <p><strong>Ore Type:</strong> ${data[2]}</p>
+                    <p><strong>Stored By:</strong> ${fullData.storedBy}</p>
+                    <p><strong>Timestamp:</strong> ${new Date(Number(fullData.timestamp) * 1000).toLocaleString()}</p>
                 </div>
-                <div style="margin-top: 15px; display: flex; gap: 10px;">
-                    <button onclick="copyToClipboard('${hash}')" class="btn-secondary">
-                        <i class="fas fa-copy"></i> Copy Hash
-                    </button>
-                    <button onclick="showSection('transactionHistory')" class="btn-primary">
-                        <i class="fas fa-history"></i> View History
-                    </button>
-                </div>
+                <p>Data successfully retrieved from blockchain contract.</p>
             </div>
         `;
-        resultDiv.className = 'result success';
-
-        showNotification('Data retrieved successfully!', 'success');
 
     } catch (error) {
-        console.error("Retrieve data error:", error);
-        const resultDiv = document.getElementById('retrievalResult');
+        console.error('Retrieval error:', error);
         resultDiv.innerHTML = `
-            <div style="color: var(--error);">
-                <h4><i class="fas fa-times-circle"></i> Retrieval Failed</h4>
-                <p>Error: ${error.message}</p>
-                <p style="margin-top: 10px; font-size: 0.9rem;">Please check the hash and try again.</p>
+            <div class="error">
+                <i class="fas fa-exclamation-triangle"></i> Error retrieving data
+                <p>${error.message}</p>
             </div>
         `;
-        resultDiv.className = 'result error';
-        resultDiv.style.display = 'block';
-        showNotification('Failed to retrieve data: ' + error.message, 'error');
     }
 }
 
-// Load transaction history
-function loadTransactionHistory() {
-    const transactionsList = document.getElementById('transactionsList');
-    const filterMine = document.getElementById('filterMine');
-    const filterDate = document.getElementById('filterDate');
-    
-    // Update mine filter options
-    const uniqueMines = [...new Set(transactionHistory.map(tx => tx.mineName))];
-    filterMine.innerHTML = '<option value="">All Mines</option>' + 
-        uniqueMines.map(mine => `<option value="${mine}">${mine}</option>`).join('');
-    
-    let filteredTransactions = transactionHistory;
-    
-    // Apply filters
-    if (filterDate.value) {
-        filteredTransactions = filteredTransactions.filter(tx => 
-            tx.productionDate === filterDate.value
-        );
+// Update dashboard with REAL blockchain data
+async function updateDashboardStats() {
+    try {
+        if (!contract) return;
+
+        // Get REAL total transactions from blockchain
+        const totalStoredData = await contract.methods.getTotalStoredData().call();
+        
+        // Get user's transaction count from localStorage (for demo)
+        const userTransactions = JSON.parse(localStorage.getItem('miningTransactions') || '[]');
+        const userTxCount = userTransactions.length;
+
+        // Update with REAL data
+        document.getElementById('totalTransactions').textContent = totalStoredData;
+        document.getElementById('successfulTransactions').textContent = totalStoredData; // All are successful if stored
+        document.getElementById('activeUsers').textContent = "Multiple"; // Since contract is public
+        document.getElementById('uptimePercentage').textContent = '100%';
+
+        updateRecentActivity();
+        
+    } catch (error) {
+        console.error('Error updating stats:', error);
     }
-    
-    if (filterMine.value) {
-        filteredTransactions = filteredTransactions.filter(tx => 
-            tx.mineName === filterMine.value
-        );
-    }
-    
-    if (filteredTransactions.length === 0) {
-        transactionsList.innerHTML = `
+}
+
+// Save transaction to localStorage
+function saveTransactionToLocalStorage(transactionData) {
+    const transactions = JSON.parse(localStorage.getItem('miningTransactions') || '[]');
+    transactions.push(transactionData);
+    localStorage.setItem('miningTransactions', JSON.stringify(transactions));
+}
+
+// Update transaction history with mixed data (blockchain + local)
+async function updateTransactionHistory() {
+    try {
+        const localTransactions = JSON.parse(localStorage.getItem('miningTransactions') || '[]');
+        const transactionsList = document.getElementById('transactionsList');
+        
+        if (localTransactions.length === 0) {
+            transactionsList.innerHTML = '<tr><td colspan="6" class="no-data">No transactions found</td></tr>';
+            return;
+        }
+
+        transactionsList.innerHTML = localTransactions.reverse().map(tx => `
             <tr>
-                <td colspan="6" class="no-data">No transactions found</td>
+                <td>${new Date(tx.timestamp).toLocaleString()}</td>
+                <td>
+                    <span class="hash" onclick="copyToClipboard('${tx.transactionHash}')" title="Click to copy">
+                        ${tx.transactionHash.substring(0, 10)}...${tx.transactionHash.substring(58)}
+                    </span>
+                </td>
+                <td>${tx.mineName}</td>
+                <td>${tx.oreType}</td>
+                <td><span class="status-badge success">Success</span></td>
+                <td>
+                    <button class="btn-small" onclick="viewTransactionDetails('${tx.dataHash}')">
+                        <i class="fas fa-eye"></i> View Data
+                    </button>
+                    <button class="btn-small" onclick="copyToClipboard('${tx.transactionHash}')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </td>
             </tr>
-        `;
-        return;
+        `).join('');
+
+    } catch (error) {
+        console.error('Error updating history:', error);
     }
-    
-    // Sort by timestamp (newest first)
-    filteredTransactions.sort((a, b) => b.timestamp - a.timestamp);
-    
-    transactionsList.innerHTML = filteredTransactions.map(transaction => `
-        <tr>
-            <td>${new Date(transaction.timestamp).toLocaleString()}</td>
-            <td style="font-family: 'Courier New', monospace; font-size: 0.8rem;">
-                ${transaction.hash.substring(0, 10)}...${transaction.hash.substring(56)}
-            </td>
-            <td>${transaction.mineName}</td>
-            <td>${transaction.oreType}</td>
-            <td>
-                <span class="status-badge status-success">Success</span>
-            </td>
-            <td>
-                <button onclick="viewTransactionDetails('${transaction.hash}')" class="view-btn">
-                    <i class="fas fa-eye"></i> View
-                </button>
-            </td>
-        </tr>
-    `).join('');
 }
 
 // View transaction details
-function viewTransactionDetails(hash) {
-    const transaction = transactionHistory.find(tx => tx.hash === hash);
-    if (transaction) {
-        // Fill the hash in data review and switch to that section
-        document.getElementById('retrieveHash').value = hash;
-        showSection('dataReview');
-        
-        // Auto-retrieve the data
-        setTimeout(() => {
-            retrieveData();
-        }, 500);
+async function viewTransactionDetails(dataHash) {
+    try {
+        const data = await contract.methods.getMiningData(dataHash).call();
+        alert(`Mining Data:\nMine: ${data[0]}\nGrade: ${data[1]}\nType: ${data[2]}`);
+    } catch (error) {
+        alert('Could not fetch data from blockchain');
     }
-}
-
-// Clear filters
-function clearFilters() {
-    document.getElementById('filterDate').value = '';
-    document.getElementById('filterMine').value = '';
-    loadTransactionHistory();
-    showNotification('Filters cleared', 'info');
 }
 
 // Copy to clipboard
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
-        showNotification('Hash copied to clipboard!', 'success');
-    }).catch(err => {
-        showNotification('Failed to copy hash', 'error');
+        alert('Copied to clipboard!');
     });
 }
-
-// Section navigation
-function showSection(sectionId) {
-    // Hide all sections
-    document.querySelectorAll('.content-section').forEach(section => {
-        section.classList.remove('active');
-    });
-    
-    // Show selected section
-    document.getElementById(sectionId).classList.add('active');
-    
-    // Special handling for certain sections
-    if (sectionId === 'transactionHistory') {
-        loadTransactionHistory();
-    }
-    
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// Mobile menu toggle
-function toggleMobileMenu() {
-    const mobileMenu = document.getElementById('mobileMenu');
-    mobileMenu.classList.toggle('active');
-}
-
-// Notification system
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 90px;
-        right: 20px;
-        padding: 15px 20px;
-        border-radius: 10px;
-        color: white;
-        font-weight: 600;
-        z-index: 10000;
-        animation: slideInRight 0.3s ease;
-        max-width: 400px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        border-left: 4px solid;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    `;
-    
-    const colors = {
-        success: '#10b981',
-        error: '#ef4444',
-        warning: '#f59e0b',
-        info: '#3b82f6'
-    };
-    
-    const icons = {
-        success: 'fa-check-circle',
-        error: 'fa-exclamation-triangle',
-        warning: 'fa-exclamation-circle',
-        info: 'fa-info-circle'
-    };
-    
-    notification.style.background = colors[type] || colors.info;
-    notification.style.borderLeftColor = colors[type] || colors.info;
-    
-    notification.innerHTML = `
-        <i class="fas ${icons[type]}" style="font-size: 1.2rem;"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Remove after 5 seconds
-    setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.3s ease';
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
-        }, 300);
-    }, 5000);
-}
-
-// Add CSS animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInRight {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    
-    @keyframes slideOutRight {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-    
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-`;
-document.head.appendChild(style);
 
 // Initialize when page loads
-window.onload = function() {
-    // Show dashboard by default
-    showSection('dashboard');
-    
-    // Set default production date to today
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('productionDate').value = today;
-    
-    // Auto-connect if MetaMask is already connected
-    if (typeof window.ethereum !== 'undefined') {
-        window.ethereum.request({ method: 'eth_accounts' })
-            .then(accounts => {
-                if (accounts.length > 0) {
-                    initWeb3();
-                }
-            });
-    }
-    
-    // Initialize dashboard stats
-    updateDashboardStats();
-    
-    console.log('MineLedger website initialized successfully!');
-};
-
-// Handle MetaMask account changes
-if (typeof window.ethereum !== 'undefined') {
-    window.ethereum.on('accountsChanged', function (accounts) {
-        if (accounts.length === 0) {
-            // User disconnected their wallet
-            updateConnectionStatus(false);
-            showNotification('Wallet disconnected', 'warning');
-        } else {
-            // User switched accounts
-            userAccount = accounts[0];
-            updateConnectionStatus(true, userAccount);
-            showNotification('Account switched', 'info');
-        }
-    });
-    
-    window.ethereum.on('chainChanged', function (chainId) {
-        // Handle network changes
-        window.location.reload();
-    });
-}
-// Team Animation Controls
-function initTeamAnimation() {
-    const scrollContainer = document.querySelector('.team-scroll-container');
-    const scrollTrack = document.querySelector('.team-scroll-track');
-    
-    if (!scrollContainer || !scrollTrack) return;
-    
-    // Pause animation when hovering
-    scrollContainer.addEventListener('mouseenter', () => {
-        scrollTrack.style.animationPlayState = 'paused';
-    });
-    
-    scrollContainer.addEventListener('mouseleave', () => {
-        scrollTrack.style.animationPlayState = 'running';
-    });
-    
-    // Handle image loading errors
-    const teamImages = document.querySelectorAll('.team-member img');
-    teamImages.forEach(img => {
-        img.addEventListener('error', function() {
-            this.style.display = 'none';
-            const placeholder = this.nextElementSibling;
-            if (placeholder) {
-                placeholder.style.display = 'flex';
-            }
-        });
-        
-        img.addEventListener('load', function() {
-            this.style.opacity = '1';
-        });
-    });
-}
-
-// Initialize team animation when page loads
-window.addEventListener('load', initTeamAnimation);
-// Wallet disconnect function
-function disconnectWallet() {
-    userAccount = null;
-    updateConnectionStatus(false);
-    showNotification('Wallet disconnected successfully', 'info');
-    
-    // Clear any wallet-related data
-    localStorage.removeItem('connectedWallet');
-}
-// Wallet disconnect function
-function disconnectWallet() {
-    userAccount = null;
-    updateConnectionStatus(false);
-    showNotification('Wallet disconnected successfully', 'info');
-    
-    // Clear any wallet-related data
-    localStorage.removeItem('connectedWallet');
-}
-// Particles.js Configuration for 0g.ai style
-function initParticles() {
-    particlesJS('particles-js', {
-        particles: {
-            number: { value: 80, density: { enable: true, value_area: 800 } },
-            color: { value: "#ffffff" },
-            shape: { type: "circle" },
-            opacity: { value: 0.3, random: true },
-            size: { value: 2, random: true },
-            line_linked: {
-                enable: true,
-                distance: 150,
-                color: "#ffffff",
-                opacity: 0.2,
-                width: 1
-            },
-            move: {
-                enable: true,
-                speed: 1,
-                direction: "none",
-                random: true,
-                straight: false,
-                out_mode: "out",
-                bounce: false
-            }
-        },
-        interactivity: {
-            detect_on: "canvas",
-            events: {
-                onhover: { enable: true, mode: "repulse" },
-                onclick: { enable: true, mode: "push" },
-                resize: true
-            }
-        },
-        retina_detect: true
-    });
-}
-
-// Initialize
 window.addEventListener('load', function() {
     initParticles();
-    
-    // Smooth scroll to next section
-    document.querySelector('.scroll-down').addEventListener('click', function() {
-        window.scrollBy({ 
-            top: window.innerHeight,
-            behavior: 'smooth' 
-        });
-    });
+    // Try to auto-connect if MetaMask is already connected
+    if (window.ethereum && window.ethereum.selectedAddress) {
+        initWeb3();
+    }
 });
