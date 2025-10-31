@@ -147,17 +147,34 @@ async function initWeb3() {
 function updateConnectionStatus(connected, account = null) {
     const statusElement = document.getElementById('connectionStatus');
     const connectBtn = document.getElementById('connectBtn');
+    const walletInfo = document.getElementById('walletInfo');
+    const walletAddress = document.getElementById('walletAddress');
     
     if (connected && account) {
-        statusElement.innerHTML = `<i class="fas fa-circle" style="color: var(--success)"></i> Connected to MetaMask | ${account.substring(0, 8)}...${account.substring(36)}`;
-        statusElement.classList.add('connected');
-        connectBtn.textContent = 'Connected';
-        connectBtn.style.background = 'var(--success)';
+        // Navigation mein wallet info show karo
+        walletInfo.style.display = 'flex';
+        connectBtn.style.display = 'none';
+        walletAddress.textContent = `${account.substring(0, 6)}...${account.substring(38)}`;
+        
+        // Pages mein connection status update karo (agar element exist karta hai)
+        if (statusElement) {
+            statusElement.innerHTML = `
+                <i class="fas fa-circle" style="color: var(--success)"></i>
+                <span>Connected | ${account.substring(0, 6)}...${account.substring(38)}</span>
+            `;
+            statusElement.classList.add('connected');
+        }
+        
     } else {
-        statusElement.innerHTML = '<i class="fas fa-circle" style="color: var(--error)"></i> Disconnected from MetaMask';
-        statusElement.classList.remove('connected');
-        connectBtn.textContent = 'Connect Wallet';
-        connectBtn.style.background = 'var(--primary)';
+        // Navigation mein connect button show karo
+        walletInfo.style.display = 'none';
+        connectBtn.style.display = 'block';
+        
+        // Pages mein connection status update karo (agar element exist karta hai)
+        if (statusElement) {
+            statusElement.innerHTML = '<i class="fas fa-circle" style="color: var(--error)"></i> Disconnected from MetaMask';
+            statusElement.classList.remove('connected');
+        }
     }
 }
 // Update dashboard statistics
@@ -674,6 +691,15 @@ function initTeamAnimation() {
 
 // Initialize team animation when page loads
 window.addEventListener('load', initTeamAnimation);
+// Wallet disconnect function
+function disconnectWallet() {
+    userAccount = null;
+    updateConnectionStatus(false);
+    showNotification('Wallet disconnected successfully', 'info');
+    
+    // Clear any wallet-related data
+    localStorage.removeItem('connectedWallet');
+}
 // Wallet disconnect function
 function disconnectWallet() {
     userAccount = null;
