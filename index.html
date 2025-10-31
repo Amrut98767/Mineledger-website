@@ -21,20 +21,29 @@
             
             <!-- Desktop Menu -->
             <ul class="nav-menu">
-                <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
-                <li><a href="#" onclick="showSection('dataSubmission')">Data Submission</a></li>
-                <li><a href="#" onclick="showSection('dataReview')">Data Review</a></li>
-                <li><a href="#" onclick="showSection('transactionHistory')">Transaction History</a></li>
-                <li class="dropdown">
-                    <a href="#">More <i class="fas fa-chevron-down"></i></a>
-                    <div class="dropdown-content">
-                        <a href="#" onclick="showSection('ipfsStorage')">IPFS Storage <span class="coming-soon">Coming Soon</span></a>
-                        <a href="#" onclick="showSection('billPayment')">Bill Payment <span class="coming-soon">Coming Soon</span></a>
-                    </div>
-                </li>
-                <li><button class="btn-connect" onclick="initWeb3()" id="connectBtn">Connect Wallet</button></li>
-            </ul>
-
+    <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
+    <li><a href="#" onclick="showSection('dataSubmission')">Data Submission</a></li>
+    <li><a href="#" onclick="showSection('dataReview')">Data Review</a></li>
+    <li><a href="#" onclick="showSection('transactionHistory')">Transaction History</a></li>
+    <li class="dropdown">
+        <a href="#">More <i class="fas fa-chevron-down"></i></a>
+        <div class="dropdown-content">
+            <a href="#" onclick="showSection('ipfsStorage')">IPFS Storage <span class="coming-soon">Coming Soon</span></a>
+            <a href="#" onclick="showSection('billPayment')">Bill Payment <span class="coming-soon">Coming Soon</span></a>
+        </div>
+    </li>
+    <li>
+        <div class="wallet-container" id="walletContainer">
+            <button class="btn-connect" onclick="initWeb3()" id="connectBtn">Connect Wallet</button>
+            <div class="wallet-info" id="walletInfo" style="display: none;">
+                <span class="wallet-address" id="walletAddress"></span>
+                <button onclick="disconnectWallet()" class="btn-disconnect-nav">
+                    <i class="fas fa-power-off"></i> Disconnect
+                </button>
+            </div>
+        </div>
+    </li>
+</ul>
             <!-- Mobile Menu Button -->
             <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
                 <i class="fas fa-bars"></i>
