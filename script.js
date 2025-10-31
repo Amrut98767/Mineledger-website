@@ -109,7 +109,7 @@ async function initWeb3() {
     }
 }
 
-// Store data on actual blockchain
+// Fixed storeData function with proper hash handling
 async function storeData() {
     try {
         const mineName = document.getElementById('mineName').value;
@@ -125,11 +125,15 @@ async function storeData() {
 
         const resultDiv = document.getElementById('storageResult');
         resultDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Storing on blockchain...</div>';
+        resultDiv.style.display = 'block';
 
         const accounts = await web3.eth.getAccounts();
         
-        // Generate unique hash for this data
-        const dataHash = web3.utils.sha3(mineName + oreGrade + oreType + productionDate + quantity + Date.now());
+        // ✅ FIX: Create a simple unique hash that we can easily retrieve
+        const dataString = `${mineName}-${oreGrade}-${oreType}-${productionDate}-${quantity}-${Date.now()}`;
+        const dataHash = web3.utils.keccak256(dataString);
+        
+        console.log('Storing data with hash:', dataHash);
         
         // Store on actual blockchain
         const transaction = await contract.methods.storeMiningData(
@@ -139,12 +143,14 @@ async function storeData() {
             oreType
         ).send({ from: accounts[0] });
 
-        // Show success with actual transaction hash
+        console.log('Transaction completed:', transaction);
+
+        // Show success with BOTH hashes
         resultDiv.innerHTML = `
             <div class="success">
                 <i class="fas fa-check-circle"></i> Data Stored on Blockchain Successfully!
                 <div class="transaction-hash">
-                    <strong>Transaction Hash:</strong> 
+                    <strong>Transaction Hash (MetaMask):</strong> 
                     <span onclick="copyToClipboard('${transaction.transactionHash}')" style="cursor: pointer;">
                         ${transaction.transactionHash.substring(0, 10)}...${transaction.transactionHash.substring(58)}
                     </span>
@@ -153,15 +159,17 @@ async function storeData() {
                     </button>
                 </div>
                 <div class="transaction-hash">
-                    <strong>Data Hash:</strong> 
-                    <span onclick="copyToClipboard('${dataHash}')" style="cursor: pointer;">
-                        ${dataHash.substring(0, 10)}...${dataHash.substring(58)}
+                    <strong>Data Hash (Use this for retrieval):</strong> 
+                    <span onclick="copyToClipboard('${dataHash}')" style="cursor: pointer; color: #ff6b00; font-weight: bold;">
+                        ${dataHash}
                     </span>
                     <button onclick="copyToClipboard('${dataHash}')" class="btn-copy">
                         <i class="fas fa-copy"></i>
                     </button>
                 </div>
-                <p>Your mining data has been securely stored on the blockchain.</p>
+                <p style="margin-top: 15px; padding: 10px; background: #fff3cd; border-radius: 5px;">
+                    <strong>Note:</strong> Use the <strong>Data Hash</strong> above to retrieve this data later.
+                </p>
             </div>
         `;
 
@@ -172,7 +180,7 @@ async function storeData() {
             oreType,
             productionDate,
             quantity,
-            dataHash,
+            dataHash, // ✅ This is the important hash for retrieval
             transactionHash: transaction.transactionHash,
             timestamp: Date.now(),
             from: accounts[0]
@@ -203,29 +211,62 @@ async function storeData() {
     }
 }
 
-// Retrieve data from actual blockchain
+// Improved retrieveData with better error handling
 async function retrieveData() {
     const hash = document.getElementById('retrieveHash').value.trim();
     const resultDiv = document.getElementById('retrievalResult');
     
     if (!hash) {
         resultDiv.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i> Please enter a data hash</div>';
+        resultDiv.style.display = 'block';
+        return;
+    }
+
+    // Validate hash format
+    if (!hash.startsWith('0x') || hash.length !== 66) {
+        resultDiv.innerHTML = `
+            <div class="error">
+                <i class="fas fa-exclamation-triangle"></i> Invalid hash format
+                <p>Hash should start with '0x' and be 66 characters long.</p>
+                <p>Current length: ${hash.length} characters</p>
+            </div>
+        `;
+        resultDiv.style.display = 'block';
         return;
     }
 
     try {
         resultDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Retrieving data from blockchain...</div>';
-        
-        // Get data from actual blockchain contract
-        const data = await contract.methods.getMiningData(hash).call();
-        
-        if (data[0] === "" && data[1] === "" && data[2] === "") {
-            resultDiv.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i> Data not found on blockchain</div>';
+        resultDiv.style.display = 'block';
+
+        if (!contract) {
+            resultDiv.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i> Please connect MetaMask first</div>';
             return;
         }
 
-        // Get additional details from mapping
+        console.log('Retrieving data for hash:', hash);
+        
+        // Get data from contract
+        const data = await contract.methods.getMiningData(hash).call();
+        console.log('Raw data from contract:', data);
+        
+        // Check if data exists
+        if (data[0] === "" && data[1] === "" && data[2] === "") {
+            resultDiv.innerHTML = `
+                <div class="error">
+                    <i class="fas fa-exclamation-triangle"></i> Data not found for this hash
+                    <p style="margin-top: 10px;">
+                        This hash does not exist in the smart contract. Make sure you're using the correct <strong>Data Hash</strong> 
+                        (not the Transaction Hash) from when you stored the data.
+                    </p>
+                </div>
+            `;
+            return;
+        }
+
+        // Get additional details
         const fullData = await contract.methods.hashToMiningData(hash).call();
+        console.log('Full data details:', fullData);
         
         resultDiv.innerHTML = `
             <div class="success">
@@ -236,22 +277,43 @@ async function retrieveData() {
                     <p><strong>Ore Type:</strong> ${data[2]}</p>
                     <p><strong>Stored By:</strong> ${fullData.storedBy}</p>
                     <p><strong>Timestamp:</strong> ${new Date(Number(fullData.timestamp) * 1000).toLocaleString()}</p>
+                    <p><strong>Data Hash:</strong> <code>${hash}</code></p>
                 </div>
-                <p>Data successfully retrieved from blockchain contract.</p>
+                <p>✅ Data successfully verified on blockchain!</p>
             </div>
         `;
 
-        showNotification('Data retrieved from blockchain successfully!', 'success');
+        showNotification('Data retrieved successfully!', 'success');
 
     } catch (error) {
         console.error('Retrieval error:', error);
-        resultDiv.innerHTML = `
-            <div class="error">
-                <i class="fas fa-exclamation-triangle"></i> Error retrieving data
-                <p>${error.message}</p>
-            </div>
-        `;
-        showNotification('Error retrieving data: ' + error.message, 'error');
+        
+        if (error.message.includes('Data not found for this hash')) {
+            resultDiv.innerHTML = `
+                <div class="error">
+                    <i class="fas fa-exclamation-triangle"></i> Data Not Found
+                    <p>No mining data found for the provided hash.</p>
+                    <div style="margin-top: 15px; padding: 10px; background: #fff3cd; border-radius: 5px;">
+                        <strong>Tips:</strong>
+                        <ul style="text-align: left; margin: 10px 0;">
+                            <li>Make sure you're using the <strong>Data Hash</strong> (not Transaction Hash)</li>
+                            <li>Verify the hash was copied correctly</li>
+                            <li>Check if the data was stored successfully</li>
+                            <li>Ensure you're on the Goerli testnet</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        } else {
+            resultDiv.innerHTML = `
+                <div class="error">
+                    <i class="fas fa-exclamation-triangle"></i> Retrieval Error
+                    <p>${error.message}</p>
+                </div>
+            `;
+        }
+        
+        showNotification('Error retrieving data', 'error');
     }
 }
 
