@@ -1128,3 +1128,56 @@ body {
 .member-photo img:not([src]) {
     opacity: 0;
 }
+/* Disconnect Button Styling */
+.btn-disconnect {
+    background: var(--error);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.btn-disconnect:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+/* Back Button Styling */
+.btn-back {
+    background: var(--gray);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.btn-back:hover {
+    background: #4b5563;
+    transform: translateY(-1px);
+}
+
+/* Connection status with disconnect button */
+.connection-status.connected {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+}
+
+.connection-status .connection-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
