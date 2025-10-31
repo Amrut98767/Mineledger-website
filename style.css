@@ -1140,11 +1140,15 @@ body {
     margin-left: 10px;
     transition: all 0.3s ease;
     font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .btn-disconnect:hover {
     background: #dc2626;
     transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
 }
 
 /* Back Button Styling */
@@ -1161,11 +1165,13 @@ body {
     align-items: center;
     gap: 8px;
     margin-bottom: 20px;
+    font-weight: 500;
 }
 
 .btn-back:hover {
     background: #4b5563;
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Connection status with disconnect button */
@@ -1174,10 +1180,33 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 12px 20px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .connection-status .connection-info {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex: 1;
+}
+
+/* Mobile responsive for connection status */
+@media (max-width: 480px) {
+    .connection-status.connected {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .btn-disconnect {
+        margin-left: 0;
+        margin-top: 10px;
+        justify-content: center;
+    }
+    
+    .btn-back {
+        width: 100%;
+        justify-content: center;
+    }
 }
