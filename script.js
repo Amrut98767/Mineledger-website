@@ -150,8 +150,10 @@ function updateConnectionStatus(connected, account = null) {
     
     if (connected && account) {
         statusElement.innerHTML = `
-            <i class="fas fa-circle" style="color: var(--success)"></i> 
-            Connected | ${account.substring(0, 6)}...${account.substring(38)}
+            <div class="connection-info">
+                <i class="fas fa-circle" style="color: var(--success)"></i>
+                <span>Connected | ${account.substring(0, 6)}...${account.substring(38)}</span>
+            </div>
             <button onclick="disconnectWallet()" class="btn-disconnect">
                 <i class="fas fa-power-off"></i> Disconnect
             </button>
@@ -681,6 +683,7 @@ function initTeamAnimation() {
 
 // Initialize team animation when page loads
 window.addEventListener('load', initTeamAnimation);
+
 // Wallet disconnect function
 function disconnectWallet() {
     userAccount = null;
