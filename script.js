@@ -759,3 +759,89 @@ window.addEventListener('load', function() {
         });
     });
 });
+// Show operation section (hide hero and team)
+function showOperationSection(sectionId) {
+    // Hide all content sections
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.style.display = 'none';
+        section.classList.remove('active');
+    });
+    
+    // Hide hero, team and footer
+    document.body.classList.add('operation-active');
+    
+    // Hide all operation containers
+    document.querySelectorAll('.operation-container').forEach(container => {
+        container.classList.remove('active');
+    });
+    
+    // Show selected operation container
+    document.getElementById(sectionId + '-container').classList.add('active');
+    
+    // Show back button
+    document.getElementById('backMainBtn').style.display = 'block';
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+}
+
+// Show main site (show everything)
+function showMainSite() {
+    // Remove operation active class
+    document.body.classList.remove('operation-active');
+    
+    // Hide all operation containers
+    document.querySelectorAll('.operation-container').forEach(container => {
+        container.classList.remove('active');
+    });
+    
+    // Show dashboard by default
+    showSection('dashboard');
+    
+    // Hide back button
+    document.getElementById('backMainBtn').style.display = 'none';
+}
+
+// Update existing showSection function
+function showSection(sectionId) {
+    // If it's one of the 3 operation sections, use new function
+    if (['dataSubmission', 'dataReview', 'transactionHistory'].includes(sectionId)) {
+        showOperationSection(sectionId);
+        return;
+    }
+    
+    // For other sections, use normal behavior
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+        section.style.display = 'none';
+    });
+    
+    const activeSection = document.getElementById(sectionId);
+    if (activeSection) {
+        activeSection.classList.add('active');
+        activeSection.style.display = 'block';
+    }
+    
+    // Ensure we're in main site mode
+    document.body.classList.remove('operation-active');
+    document.getElementById('backMainBtn').style.display = 'none';
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+}
+
+// Update mobile menu functions to work with new system
+function toggleMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenu.classList.toggle('active');
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    
+    if (!mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+        mobileMenu.classList.remove('active');
+    }
+});
