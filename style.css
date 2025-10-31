@@ -1128,3 +1128,46 @@ body {
 .member-photo img:not([src]) {
     opacity: 0;
 }
+/* Wallet Container Styling */
+.wallet-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.wallet-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.wallet-address {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--success);
+    font-family: 'Courier New', monospace;
+}
+
+/* Navigation Disconnect Button */
+.btn-disconnect-nav {
+    background: var(--error);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-disconnect-nav:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
