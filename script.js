@@ -683,7 +683,6 @@ function initTeamAnimation() {
 
 // Initialize team animation when page loads
 window.addEventListener('load', initTeamAnimation);
-
 // Wallet disconnect function
 function disconnectWallet() {
     userAccount = null;
@@ -712,10 +711,60 @@ function goBack() {
     showSection(previousSection);
 }
 
-// Browser back button handle karo
-window.addEventListener('popstate', function(event) {
-    const currentSection = document.querySelector('.content-section.active');
-    if (currentSection && currentSection.id !== 'dashboard') {
+// Browser back/forward buttons handle karo
+function initBrowserNavigation() {
+    // Current section track karo
+    let currentSection = 'dashboard';
+    
+    // URL update karo when section changes
+    function updateURL(section) {
+        currentSection = section;
+        const newURL = window.location.origin + window.location.pathname + '#' + section;
+        window.history.pushState({ section: section }, '', newURL);
+    }
+    
+    // Browser back button handle karo
+    window.addEventListener('popstate', function(event) {
+        if (event.state && event.state.section) {
+            showSection(event.state.section);
+        } else {
+            showSection('dashboard');
+        }
+    });
+    
+    // Show section function modify karo
+    const originalShowSection = window.showSection;
+    window.showSection = function(sectionId) {
+        originalShowSection(sectionId);
+        updateURL(sectionId);
+    };
+}
+
+// Initialize everything when page loads
+window.addEventListener('load', function() {
+    // Initialize browser navigation
+    initBrowserNavigation();
+    
+    // Initialize team animation
+    initTeamAnimation();
+    
+    // Check if URL has section hash
+    const hash = window.location.hash.substring(1);
+    if (hash && document.getElementById(hash)) {
+        showSection(hash);
+    } else {
         showSection('dashboard');
     }
+    
+    // Auto-connect if MetaMask is already connected
+    if (typeof window.ethereum !== 'undefined') {
+        window.ethereum.request({ method: 'eth_accounts' })
+            .then(accounts => {
+                if (accounts.length > 0) {
+                    initWeb3();
+                }
+            });
+    }
+    
+    console.log('MineLedger website initialized successfully!');
 });
