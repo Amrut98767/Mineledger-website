@@ -149,15 +149,7 @@ function updateConnectionStatus(connected, account = null) {
     const connectBtn = document.getElementById('connectBtn');
     
     if (connected && account) {
-        statusElement.innerHTML = `
-            <div class="connection-info">
-                <i class="fas fa-circle" style="color: var(--success)"></i>
-                <span>Connected | ${account.substring(0, 6)}...${account.substring(38)}</span>
-            </div>
-            <button onclick="disconnectWallet()" class="btn-disconnect">
-                <i class="fas fa-power-off"></i> Disconnect
-            </button>
-        `;
+        statusElement.innerHTML = `<i class="fas fa-circle" style="color: var(--success)"></i> Connected to MetaMask | ${account.substring(0, 8)}...${account.substring(36)}`;
         statusElement.classList.add('connected');
         connectBtn.textContent = 'Connected';
         connectBtn.style.background = 'var(--success)';
@@ -168,7 +160,6 @@ function updateConnectionStatus(connected, account = null) {
         connectBtn.style.background = 'var(--primary)';
     }
 }
-
 // Update dashboard statistics
 function updateDashboardStats() {
     document.getElementById('totalTransactions').textContent = transactionHistory.length;
@@ -692,79 +683,3 @@ function disconnectWallet() {
     // Clear any wallet-related data
     localStorage.removeItem('connectedWallet');
 }
-
-// Back button functionality
-function goBack() {
-    const currentSection = document.querySelector('.content-section.active');
-    const currentSectionId = currentSection.id;
-    
-    // Define navigation flow
-    const navigationFlow = {
-        'dataSubmission': 'dashboard',
-        'dataReview': 'dashboard', 
-        'transactionHistory': 'dashboard',
-        'ipfsStorage': 'dashboard',
-        'billPayment': 'dashboard'
-    };
-    
-    const previousSection = navigationFlow[currentSectionId] || 'dashboard';
-    showSection(previousSection);
-}
-
-// Browser back/forward buttons handle karo
-function initBrowserNavigation() {
-    // Current section track karo
-    let currentSection = 'dashboard';
-    
-    // URL update karo when section changes
-    function updateURL(section) {
-        currentSection = section;
-        const newURL = window.location.origin + window.location.pathname + '#' + section;
-        window.history.pushState({ section: section }, '', newURL);
-    }
-    
-    // Browser back button handle karo
-    window.addEventListener('popstate', function(event) {
-        if (event.state && event.state.section) {
-            showSection(event.state.section);
-        } else {
-            showSection('dashboard');
-        }
-    });
-    
-    // Show section function modify karo
-    const originalShowSection = window.showSection;
-    window.showSection = function(sectionId) {
-        originalShowSection(sectionId);
-        updateURL(sectionId);
-    };
-}
-
-// Initialize everything when page loads
-window.addEventListener('load', function() {
-    // Initialize browser navigation
-    initBrowserNavigation();
-    
-    // Initialize team animation
-    initTeamAnimation();
-    
-    // Check if URL has section hash
-    const hash = window.location.hash.substring(1);
-    if (hash && document.getElementById(hash)) {
-        showSection(hash);
-    } else {
-        showSection('dashboard');
-    }
-    
-    // Auto-connect if MetaMask is already connected
-    if (typeof window.ethereum !== 'undefined') {
-        window.ethereum.request({ method: 'eth_accounts' })
-            .then(accounts => {
-                if (accounts.length > 0) {
-                    initWeb3();
-                }
-            });
-    }
-    
-    console.log('MineLedger website initialized successfully!');
-});
