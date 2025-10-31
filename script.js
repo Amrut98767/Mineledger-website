@@ -640,3 +640,38 @@ if (typeof window.ethereum !== 'undefined') {
         window.location.reload();
     });
 }
+// Team Animation Controls
+function initTeamAnimation() {
+    const scrollContainer = document.querySelector('.team-scroll-container');
+    const scrollTrack = document.querySelector('.team-scroll-track');
+    
+    if (!scrollContainer || !scrollTrack) return;
+    
+    // Pause animation when hovering
+    scrollContainer.addEventListener('mouseenter', () => {
+        scrollTrack.style.animationPlayState = 'paused';
+    });
+    
+    scrollContainer.addEventListener('mouseleave', () => {
+        scrollTrack.style.animationPlayState = 'running';
+    });
+    
+    // Handle image loading errors
+    const teamImages = document.querySelectorAll('.team-member img');
+    teamImages.forEach(img => {
+        img.addEventListener('error', function() {
+            this.style.display = 'none';
+            const placeholder = this.nextElementSibling;
+            if (placeholder) {
+                placeholder.style.display = 'flex';
+            }
+        });
+        
+        img.addEventListener('load', function() {
+            this.style.opacity = '1';
+        });
+    });
+}
+
+// Initialize team animation when page loads
+window.addEventListener('load', initTeamAnimation);
