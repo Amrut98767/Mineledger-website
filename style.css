@@ -501,14 +501,3 @@ p { color: var(--text-muted); }
     margin-bottom: 15px;
     color: var(--text-main);
 }
-
-/* ==================== HOME PAGE LAYOUT FIX (BRAHMASTRA) ==================== */
-#home.content-section {
-    display: block !important; /* Ye JS ke kisi bhi rule ko override kar dega */
-    width: 100%;
-}
-
-#home > section {
-    width: 100%;
-    display: block;
-}
