@@ -130,7 +130,7 @@ async function initWeb3() {
     }
 }
 
-// Fixed storeData function with proper hash handling
+// Fixed storeData function
 async function storeData() {
     try {
         const mineName = document.getElementById('mineName').value;
@@ -145,7 +145,7 @@ async function storeData() {
         }
 
         const resultDiv = document.getElementById('storageResult');
-        resultDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Storing on blockchain...</div>';
+        resultDiv.innerHTML = '<div class="loading" style="padding: 15px; background: rgba(99, 102, 241, 0.1); color: var(--primary); border-radius: 8px;"><i class="fas fa-spinner fa-spin"></i> Storing on blockchain...</div>';
         resultDiv.style.display = 'block';
 
         const accounts = await web3.eth.getAccounts();
@@ -166,24 +166,25 @@ async function storeData() {
 
         console.log('Transaction completed:', transaction);
 
-        // Show success with BOTH hashes
+        // FIX: Hata diya 'result' class jisse wo gayab ho raha tha! Aur naya premium design daal diya
         resultDiv.innerHTML = `
-            <div class="result success">
-                <i class="fas fa-check-circle"></i> Data Stored on Blockchain Successfully!
-                <div class="hash-display">
-                    <strong>Tx Hash:</strong> <br>
-                    <span onclick="copyToClipboard('${transaction.transactionHash}')" style="cursor: pointer;">
+            <div class="success" style="padding: 20px; border-radius: 8px; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981;">
+                <h3 style="color: #10b981; margin-bottom: 15px;"><i class="fas fa-check-circle"></i> Data Stored on Blockchain Successfully!</h3>
+                <div class="hash-display" style="background: var(--bg-main); padding: 12px; border-radius: 6px; margin-bottom: 10px; border-left: 4px solid var(--primary); font-family: monospace;">
+                    <strong style="color: var(--text-main);">Tx Hash:</strong> <br>
+                    <span onclick="copyToClipboard('${transaction.transactionHash}')" style="cursor: pointer; color: var(--primary);">
                         ${transaction.transactionHash.substring(0, 15)}...${transaction.transactionHash.substring(50)}
                     </span>
                 </div>
-                <div class="hash-display" style="border-left-color: #f59e0b;">
-                    <strong>Data Hash (Save this!):</strong> <br>
+                <div class="hash-display" style="background: var(--bg-main); padding: 12px; border-radius: 6px; border-left: 4px solid #f59e0b; font-family: monospace;">
+                    <strong style="color: var(--text-main);">Data Hash (Save this!):</strong> <br>
                     <span onclick="copyToClipboard('${dataHash}')" style="cursor: pointer; color: #f59e0b;">
                         ${dataHash.substring(0, 20)}...
                     </span>
                 </div>
             </div>
         `;
+        resultDiv.style.display = 'block';
 
         // Store in localStorage for quick access
         saveTransactionToLocalStorage({
@@ -213,12 +214,14 @@ async function storeData() {
 
     } catch (error) {
         console.error('Storage error:', error);
-        document.getElementById('storageResult').innerHTML = `
-            <div class="result error">
+        const resultDiv = document.getElementById('storageResult');
+        resultDiv.innerHTML = `
+            <div class="error" style="padding: 20px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444;">
                 <i class="fas fa-exclamation-triangle"></i> Blockchain Storage Failed
                 <p>${error.message}</p>
             </div>
         `;
+        resultDiv.style.display = 'block';
         showNotification('Error storing data: ' + error.message, 'error');
     }
 }
@@ -229,14 +232,14 @@ async function retrieveData() {
     const resultDiv = document.getElementById('retrievalResult');
     
     if (!hash) {
-        resultDiv.innerHTML = '<div class="result error"><i class="fas fa-exclamation-triangle"></i> Please enter a data hash</div>';
+        resultDiv.innerHTML = '<div class="error" style="padding: 15px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 8px;"><i class="fas fa-exclamation-triangle"></i> Please enter a data hash</div>';
         resultDiv.style.display = 'block';
         return;
     }
 
     if (!hash.startsWith('0x') || hash.length !== 66) {
         resultDiv.innerHTML = `
-            <div class="result error">
+            <div class="error" style="padding: 15px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 8px;">
                 <i class="fas fa-exclamation-triangle"></i> Invalid hash format
                 <p>Hash should start with '0x' and be 66 characters long.</p>
             </div>
@@ -246,11 +249,11 @@ async function retrieveData() {
     }
 
     try {
-        resultDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Retrieving data from blockchain...</div>';
+        resultDiv.innerHTML = '<div class="loading" style="padding: 15px; background: rgba(99, 102, 241, 0.1); color: var(--primary); border-radius: 8px;"><i class="fas fa-spinner fa-spin"></i> Retrieving data from blockchain...</div>';
         resultDiv.style.display = 'block';
 
         if (!contract) {
-            resultDiv.innerHTML = '<div class="result error"><i class="fas fa-exclamation-triangle"></i> Please connect MetaMask first</div>';
+            resultDiv.innerHTML = '<div class="error" style="padding: 15px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 8px;"><i class="fas fa-exclamation-triangle"></i> Please connect MetaMask first</div>';
             return;
         }
         
@@ -258,7 +261,7 @@ async function retrieveData() {
         
         if (data[0] === "" && data[1] === "" && data[2] === "") {
             resultDiv.innerHTML = `
-                <div class="result error">
+                <div class="error" style="padding: 15px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 8px;">
                     <i class="fas fa-exclamation-triangle"></i> Data not found for this hash
                     <p style="margin-top: 10px; font-size: 0.9rem;">
                         Make sure you're using the correct <strong>Data Hash</strong> (not the Transaction Hash).
@@ -271,13 +274,13 @@ async function retrieveData() {
         const fullData = await contract.methods.hashToMiningData(hash).call();
         
         resultDiv.innerHTML = `
-            <div class="result success">
-                <h3 style="margin-bottom: 15px;"><i class="fas fa-check-circle"></i> Data Verified</h3>
-                <div style="background: var(--bg-main); padding: 15px; border-radius: 8px;">
-                    <p><strong>Mine Name:</strong> ${data[0]}</p>
-                    <p><strong>Ore Grade:</strong> ${data[1]}</p>
-                    <p><strong>Ore Type:</strong> ${data[2]}</p>
-                    <p><strong>Timestamp:</strong> ${new Date(Number(fullData.timestamp) * 1000).toLocaleString()}</p>
+            <div class="success" style="padding: 20px; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 8px;">
+                <h3 style="margin-bottom: 15px; color: #10b981;"><i class="fas fa-check-circle"></i> Data Verified on Blockchain</h3>
+                <div style="background: var(--bg-main); padding: 15px; border-radius: 8px; color: var(--text-main);">
+                    <p style="margin-bottom: 8px;"><strong>Mine Name:</strong> ${data[0]}</p>
+                    <p style="margin-bottom: 8px;"><strong>Ore Grade:</strong> ${data[1]}</p>
+                    <p style="margin-bottom: 8px;"><strong>Ore Type:</strong> ${data[2]}</p>
+                    <p style="margin-bottom: 8px;"><strong>Timestamp:</strong> ${new Date(Number(fullData.timestamp) * 1000).toLocaleString()}</p>
                 </div>
             </div>
         `;
@@ -287,7 +290,7 @@ async function retrieveData() {
     } catch (error) {
         console.error('Retrieval error:', error);
         resultDiv.innerHTML = `
-            <div class="result error">
+            <div class="error" style="padding: 15px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 8px;">
                 <i class="fas fa-exclamation-triangle"></i> Retrieval Error
                 <p>${error.message}</p>
             </div>
