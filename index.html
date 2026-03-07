@@ -11,58 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 </head>
-<body>
-    <!-- 0g.ai Style Hero Section -->
-    <section id="home" class="hero-0g">
-        <!-- Animated Background -->
-        <div id="particles-js"></div>
-        
-        <!-- Floating Elements -->
-        <div class="floating-elements">
-            <div class="float-element el-1">⚡</div>
-            <div class="float-element el-2">🔗</div>
-            <div class="float-element el-3">🔒</div>
-            <div class="float-element el-4">📊</div>
-            <div class="float-element el-5">💎</div>
-            <div class="float-element el-6">🌐</div>
-        </div>
+<body data-theme="light">
 
-        <!-- Main Hero Content -->
-        <div class="hero-main">
-            <h1 class="hero-title">MINELEDGER</h1>
-            <p class="hero-subtitle">DECENTRALIZED DATA STORAGE FOR MINING INDUSTRY</p>
-            <div class="hero-stats">
-                <div class="stat">
-                    <div class="stat-number">100%</div>
-                    <div class="stat-label">Secure</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">Uptime</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">∞</div>
-                    <div class="stat-label">Scalable</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bottom Left Logo (0g.ai style) -->
-        <div class="hero-bottom">
-            <div class="bottom-logo">
-                <div class="logo-main">MINELEDGER</div>
-                <div class="logo-sub">BLOCKCHAIN SOLUTIONS</div>
-            </div>
-        </div>
-
-        <!-- Scroll Indicator -->
-        <div class="scroll-down">
-            <div class="scroll-text">Explore</div>
-            <div class="scroll-arrow">↓</div>
-        </div>
-    </section>
-    
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
@@ -70,38 +20,41 @@
                 <span>MineLedger</span>
             </div>
 
-            <!-- Desktop Menu -->
             <ul class="nav-menu">
-    <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
-    <li><a href="#" onclick="showSection('dataSubmission')">Data Submission</a></li>
-    <li><a href="#" onclick="showSection('dataReview')">Data Review</a></li>
-    <li><a href="#" onclick="showSection('transactionHistory')">Transaction History</a></li>
-    <li class="dropdown">
-        <a href="#">More <i class="fas fa-chevron-down"></i></a>
-        <div class="dropdown-content">
-            <a href="#" onclick="showSection('ipfsStorage')">IPFS Storage <span class="coming-soon">Coming Soon</span></a>
-            <a href="#" onclick="showSection('billPayment')">Bill Payment <span class="coming-soon">Coming Soon</span></a>
-        </div>
-    </li>
-    <li>
-        <div class="wallet-container" id="walletContainer">
-            <button class="btn-connect" onclick="initWeb3()" id="connectBtn">Connect Wallet</button>
-            <div class="wallet-info" id="walletInfo" style="display: none;">
-                <span class="wallet-address" id="walletAddress"></span>
-                <button onclick="disconnectWallet()" class="btn-disconnect-nav">
-                    <i class="fas fa-power-off"></i> Disconnect
-                </button>
-            </div>
-        </div>
-    </li>
-</ul>
-            <!-- Mobile Menu Button -->
+                <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
+                <li><a href="#" onclick="showSection('dataSubmission')">Data Submission</a></li>
+                <li><a href="#" onclick="showSection('dataReview')">Data Review</a></li>
+                <li><a href="#" onclick="showSection('transactionHistory')">Transaction History</a></li>
+                <li class="dropdown">
+                    <a href="#">More <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#" onclick="showSection('ipfsStorage')">IPFS Storage <span class="coming-soon">Coming Soon</span></a>
+                        <a href="#" onclick="showSection('billPayment')">Bill Payment <span class="coming-soon">Coming Soon</span></a>
+                    </div>
+                </li>
+                <li>
+                    <button id="themeToggle" class="btn-icon" onclick="toggleTheme()">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </li>
+                <li>
+                    <div class="wallet-container" id="walletContainer">
+                        <button class="btn-connect" onclick="initWeb3()" id="connectBtn">Connect Wallet</button>
+                        <div class="wallet-info" id="walletInfo" style="display: none;">
+                            <span class="wallet-address" id="walletAddress"></span>
+                            <button onclick="disconnectWallet()" class="btn-disconnect-nav">
+                                <i class="fas fa-power-off"></i> Disconnect
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            
             <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
                 <i class="fas fa-bars"></i>
             </div>
         </div>
 
-        <!-- Mobile Menu -->
         <div class="mobile-menu" id="mobileMenu">
             <a href="#" onclick="showSection('dashboard'); toggleMobileMenu();">Dashboard</a>
             <a href="#" onclick="showSection('dataSubmission'); toggleMobileMenu();">Data Submission</a>
@@ -116,49 +69,71 @@
         </div>
     </nav>
 
-    <!-- Main Content Sections -->
     <main class="main-content">
-        <!-- Dashboard Section -->
-        <section id="dashboard" class="content-section active">
+        
+        <section id="home" class="hero-silencio content-section active">
+            <div class="glow-orb orb-1"></div>
+            <div class="glow-orb orb-2"></div>
+            <div class="glow-orb orb-3"></div>
+            
+            <div class="hero-content-wrapper">
+                <div class="hero-badge">Web3 Mining Infrastructure</div>
+                <h1 class="hero-title-new">Decentralized Data for the <br><span class="gradient-text">Mining Industry</span></h1>
+                <p class="hero-subtitle-new">Enterprise-grade, secure, and immutable blockchain solutions for modern mining operations.</p>
+                
+                <div class="hero-action-buttons">
+                    <button class="btn-primary-glow" onclick="showSection('dataSubmission')">Get Started</button>
+                    <button class="btn-outline" onclick="showSection('dashboard')">View Network</button>
+                </div>
+
+                <div class="silencio-stats">
+                    <div class="s-stat">
+                        <h4>100%</h4>
+                        <p>Immutable</p>
+                    </div>
+                    <div class="s-stat">
+                        <h4>24/7</h4>
+                        <p>Uptime</p>
+                    </div>
+                    <div class="s-stat">
+                        <h4>Zero</h4>
+                        <p>Data Loss</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="dashboard" class="content-section">
             <div class="container">
                 <div class="section-header">
                     <h1>Dashboard Overview</h1>
                     <p>Welcome to MineLedger - Your blockchain mining data storage solution</p>
                 </div>
 
-                <!-- Stats Cards -->
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-database"></i>
-                        </div>
+                        <div class="stat-icon"><i class="fas fa-database"></i></div>
                         <div class="stat-info">
                             <h3 id="totalTransactions">0</h3>
                             <p>Total Transactions</p>
                         </div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
+                        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
                         <div class="stat-info">
                             <h3 id="successfulTransactions">0</h3>
                             <p>Successful Transactions</p>
                         </div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
                         <div class="stat-info">
                             <h3 id="uptimePercentage">100%</h3>
                             <p>System Uptime</p>
                         </div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
                         <div class="stat-info">
                             <h3 id="activeUsers">1</h3>
                             <p>Active Users</p>
@@ -166,26 +141,21 @@
                     </div>
                 </div>
 
-                <!-- Quick Actions -->
                 <div class="quick-actions">
                     <h2>Quick Actions</h2>
                     <div class="action-buttons">
                         <button class="action-btn" onclick="showSection('dataSubmission')">
-                            <i class="fas fa-upload"></i>
-                            <span>Submit New Data</span>
+                            <i class="fas fa-upload"></i><span>Submit New Data</span>
                         </button>
                         <button class="action-btn" onclick="showSection('dataReview')">
-                            <i class="fas fa-search"></i>
-                            <span>Review Data</span>
+                            <i class="fas fa-search"></i><span>Review Data</span>
                         </button>
                         <button class="action-btn" onclick="showSection('transactionHistory')">
-                            <i class="fas fa-history"></i>
-                            <span>View History</span>
+                            <i class="fas fa-history"></i><span>View History</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Recent Activity -->
                 <div class="recent-activity">
                     <h2>Recent Activity</h2>
                     <div class="activity-list" id="recentActivity">
@@ -198,7 +168,6 @@
             </div>
         </section>
 
-        <!-- Data Submission Section -->
         <section id="dataSubmission" class="content-section">
             <div class="container">
                 <div class="section-header">
@@ -214,18 +183,12 @@
 
                     <form class="data-form" onsubmit="event.preventDefault(); storeData();">
                         <div class="form-group">
-                            <label for="mineName">
-                                <i class="fas fa-mountain"></i>
-                                Mine Name
-                            </label>
+                            <label for="mineName"><i class="fas fa-mountain"></i>Mine Name</label>
                             <input type="text" id="mineName" placeholder="e.g., Coal Mine A, Iron Ore Site B" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="oreGrade">
-                                <i class="fas fa-gem"></i>
-                                Ore Grade
-                            </label>
+                            <label for="oreGrade"><i class="fas fa-gem"></i>Ore Grade</label>
                             <select id="oreGrade" required>
                                 <option value="">Select Grade</option>
                                 <option value="High Grade">High Grade</option>
@@ -236,10 +199,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="oreType">
-                                <i class="fas fa-hard-hat"></i>
-                                Ore Type
-                            </label>
+                            <label for="oreType"><i class="fas fa-hard-hat"></i>Ore Type</label>
                             <select id="oreType" required>
                                 <option value="">Select Type</option>
                                 <option value="Iron Ore">Iron Ore</option>
@@ -252,24 +212,17 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="productionDate">
-                                <i class="fas fa-calendar"></i>
-                                Production Date
-                            </label>
+                            <label for="productionDate"><i class="fas fa-calendar"></i>Production Date</label>
                             <input type="date" id="productionDate" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="quantity">
-                                <i class="fas fa-weight"></i>
-                                Quantity (tons)
-                            </label>
+                            <label for="quantity"><i class="fas fa-weight"></i>Quantity (tons)</label>
                             <input type="number" id="quantity" placeholder="e.g., 150" step="0.1" required>
                         </div>
 
                         <button type="submit" class="btn-primary full-width">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            Store on Blockchain
+                            <i class="fas fa-cloud-upload-alt"></i>Store on Blockchain
                         </button>
                     </form>
 
@@ -278,7 +231,6 @@
             </div>
         </section>
 
-        <!-- Data Review Section -->
         <section id="dataReview" class="content-section">
             <div class="container">
                 <div class="section-header">
@@ -289,24 +241,18 @@
                 <div class="form-container">
                     <div class="search-box">
                         <div class="form-group">
-                            <label for="retrieveHash">
-                                <i class="fas fa-hashtag"></i>
-                                Enter Transaction Hash
-                            </label>
+                            <label for="retrieveHash"><i class="fas fa-hashtag"></i>Enter Transaction Hash</label>
                             <input type="text" id="retrieveHash" placeholder="Paste your transaction hash starting with 0x...">
                         </div>
                         <button onclick="retrieveData()" class="btn-primary full-width">
-                            <i class="fas fa-download"></i>
-                            Retrieve Data
+                            <i class="fas fa-download"></i>Retrieve Data
                         </button>
                     </div>
-
                     <div id="retrievalResult" class="result"></div>
                 </div>
             </div>
         </section>
 
-        <!-- Transaction History Section -->
         <section id="transactionHistory" class="content-section">
             <div class="container">
                 <div class="section-header">
@@ -352,7 +298,6 @@
             </div>
         </section>
 
-        <!-- IPFS Storage Section -->
         <section id="ipfsStorage" class="content-section">
             <div class="container">
                 <div class="section-header">
@@ -362,7 +307,7 @@
                 <div class="coming-soon-section">
                     <i class="fas fa-tools"></i>
                     <h2>Feature Under Development</h2>
-                    <p>We're working on integrating IPFS for decentralized file storage. This feature will allow you to store large mining files securely on the distributed web.</p>
+                    <p>We're working on integrating IPFS for decentralized file storage.</p>
                     <div class="progress-container">
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: 45%"></div>
@@ -373,7 +318,6 @@
             </div>
         </section>
 
-        <!-- Bill Payment Section -->
         <section id="billPayment" class="content-section">
             <div class="container">
                 <div class="section-header">
@@ -395,214 +339,131 @@
         </section>
     </main>
 
-    <!-- Team Section -->
-    <!-- Team Section with Animation -->
-<section class="team-section">
-    <div class="container">
-        <h2>Meet Our Team</h2>
-        <p class="section-subtitle">The brilliant minds behind MineLedger</p>
-        
-        <!-- Animated Team Scroll -->
-        <div class="team-scroll-container">
-            <div class="team-scroll-track">
-                <!-- Team Members Set 1 -->
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member1.jpeg" alt="Amrut Prasad" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+    <section class="team-section">
+        <div class="container">
+            <h2>Meet Our Team</h2>
+            <p class="section-subtitle">The brilliant minds behind MineLedger</p>
+            
+            <div class="team-scroll-container">
+                <div class="team-scroll-track">
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member1.jpeg" alt="Amrut Prasad" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Amrut Prasad</h3><p>Blockchain Developer</p>
                     </div>
-                    <h3>Amrut Prasad</h3>
-                    <p>Blockchain Developer</p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member2.jpeg" alt="Siddhi Swagat" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member2.jpeg" alt="Siddhi Swagat" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Siddhi Swagat</h3><p>UI/UX Developer</p>
                     </div>
-                    <h3>Siddhi Swagat</h3>
-                    <p>UI/UX Developer</p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member3.jpeg" alt="Amrit Kumar" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member3.jpeg" alt="Amrit Kumar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Amrit Kumar</h3><p>Full Stack Developer</p>
                     </div>
-                    <h3>Amrit Kumar</h3>
-                    <p>Full Stack Developer</p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member4.jpeg" alt="Anand Kumar" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member4.jpeg" alt="Anand Kumar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Anand Kumar</h3><p>Data Analyst</p>
                     </div>
-                    <h3>Anand Kumar</h3>
-                    <p>Data Analyst</p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member5.jpeg" alt="Ashutosh Sahoo" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member5.jpeg" alt="Ashutosh Sahoo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Ashutosh Sahoo</h3><p>Project Manager</p>
                     </div>
-                    <h3>Ashutosh Sahoo</h3>
-                    <p>Project Manager</p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member6.jpeg" alt="Tushar Ranjan" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member6.jpeg" alt="Tushar Ranjan" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Tushar Ranjan</h3><p>DevOps Engineer</p>
                     </div>
-                    <h3>Tushar Ranjan</h3>
-                    <p>DevOps Engineer</p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member7.jpeg" alt="Amarttya Anubhab" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member7.jpeg" alt="Amarttya Anubhab" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Amarttya Anubhab</h3><p>Backend Developer</p>
                     </div>
-                    <h3>Amarttya Anubhab</h3>
-                    <p>Backend Developer</p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member8.jpeg" alt="Abhijit Sahu" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member8.jpeg" alt="Abhijit Sahu" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Abhijit Sahu</h3><p>Frontend Developer</p>
                     </div>
-                    <h3>Abhijit Sahu</h3>
-                    <p>Frontend Developer</p>
-                </div>
 
-                <!-- Duplicate Set for Smooth Animation -->
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member1.jpeg" alt="Amrut Prasad" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member1.jpeg" alt="Amrut Prasad" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Amrut Prasad</h3><p>Blockchain Developer</p>
                     </div>
-                    <h3>Amrut Prasad</h3>
-                    <p>Blockchain Developer</p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member2.jpeg" alt="Siddhi Swagat" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member2.jpeg" alt="Siddhi Swagat" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Siddhi Swagat</h3><p>UI/UX Developer</p>
                     </div>
-                    <h3>Siddhi Swagat</h3>
-                    <p>UI/UX Developer</p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member3.jpeg" alt="Amrut Kumar" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member3.jpeg" alt="Amrut Kumar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Amrut Kumar</h3><p>Full Stack Developer</p>
                     </div>
-                    <h3>Amrut Kumar</h3>
-                    <p>Full Stack Developer</p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member4.jpeg" alt="Anand Kumar" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member4.jpeg" alt="Anand Kumar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Anand Kumar</h3><p>Data Analyst</p>
                     </div>
-                    <h3>Anand Kumar</h3>
-                    <p>Data Analyst</p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member5.jpeg" alt="Ashutosh Sahoo" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member5.jpeg" alt="Ashutosh Sahoo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Ashutosh Sahoo</h3><p>Project Manager</p>
                     </div>
-                    <h3>Ashutosh Sahoo</h3>
-                    <p>Project Manager</p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member6.jpeg" alt="Tushar Ranjan" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member6.jpeg" alt="Tushar Ranjan" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Tushar Ranjan</h3><p>DevOps Engineer</p>
                     </div>
-                    <h3>Tushar Ranjan</h3>
-                    <p>DevOps Engineer</p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member7.jpeg" alt="Amarttya Anubhab" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member7.jpeg" alt="Amarttya Anubhab" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Amarttya Anubhab</h3><p>Backend Developer</p>
                     </div>
-                    <h3>Amarttya Anubhab</h3>
-                    <p>Backend Developer</p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/member8.jpeg" alt="Abhijit Sahu" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-photo">
-                            <i class="fas fa-user"></i>
+                    <div class="team-member">
+                        <div class="member-photo">
+                            <img src="images/member8.jpeg" alt="Abhijit Sahu" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-photo"><i class="fas fa-user"></i></div>
                         </div>
+                        <h3>Abhijit Sahu</h3><p>Frontend Developer</p>
                     </div>
-                    <h3>Abhijit Sahu</h3>
-                    <p>Frontend Developer</p>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-    <!-- Footer -->
+    </section>
+
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -611,14 +472,9 @@
                     <span>MineLedger</span>
                     <p>Blockchain-powered data storage for mining industry</p>
                 </div>
-                <div class="footer-links">
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 MineLedger. Built for Mining Engineering Blockchain Project.</p>
+                <p>&copy; 2026 MineLedger. Built for Mechanical Engineering Project.</p>
             </div>
         </div>
     </footer>
