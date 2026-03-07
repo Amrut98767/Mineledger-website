@@ -461,18 +461,28 @@ function disconnectWallet() {
     showNotification('Wallet disconnected', 'info');
 }
 
-// Show specific section
+// Show specific section (NUCLEAR FIX)
 function showSection(sectionId) {
+    // 1. Sabse pehle browser ko force karo ki SARE sections chupaye (!important ke sath)
     document.querySelectorAll('.content-section').forEach(section => {
         section.classList.remove('active');
-        section.style.display = 'none';
+        section.style.setProperty('display', 'none', 'important');
     });
     
+    // 2. Extra safety: Home page ko alag se pakad kar force-hide karo
+    if (sectionId !== 'home') {
+        const homeSection = document.getElementById('home');
+        if (homeSection) homeSection.style.setProperty('display', 'none', 'important');
+    }
+    
+    // 3. Jis section par click kiya hai, sirf usko force-show karo
     const activeSection = document.getElementById(sectionId);
     if (activeSection) {
         activeSection.classList.add('active');
-        activeSection.style.display = 'block'; 
+        activeSection.style.setProperty('display', 'block', 'important'); 
     }
+    
+    // 4. Page ko ekdum upar scroll kar do
     window.scrollTo(0, 0);
 }
 
