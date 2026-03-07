@@ -391,5 +391,27 @@
     </footer>
 
     <script src="script.js"></script>
+
+    <script>
+        // Ye code script.js wale purane code ko override (khatam) kar dega
+        window.showSection = function(sectionId) {
+            // 1. Saare sections ko pakad kar force-hide karo
+            const allSections = document.querySelectorAll('.content-section');
+            for(let i = 0; i < allSections.length; i++) {
+                allSections[i].style.display = 'none';
+                allSections[i].classList.remove('active');
+            }
+            
+            // 2. Jis tab par click kiya hai, sirf use show karo
+            const targetSection = document.getElementById(sectionId);
+            if(targetSection) {
+                targetSection.style.display = 'block';
+                targetSection.classList.add('active');
+            }
+            
+            // 3. Page ko top par scroll kar do
+            window.scrollTo(0, 0);
+        };
+    </script>
 </body>
 </html>
