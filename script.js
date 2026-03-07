@@ -466,7 +466,8 @@ function showSection(sectionId) {
     const activeSection = document.getElementById(sectionId);
     if (activeSection) {
         activeSection.classList.add('active');
-        activeSection.style.display = sectionId === 'home' ? 'flex' : 'block';
+        // Yahan 'flex' ki jagah 'block' kar diya hai taaki sab ek ke niche ek aayein
+        activeSection.style.display = 'block'; 
     }
     window.scrollTo(0, 0);
 }
