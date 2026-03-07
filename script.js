@@ -130,7 +130,7 @@ async function initWeb3() {
     }
 }
 
-// Fixed storeData function
+// Fixed storeData function with premium styling
 async function storeData() {
     try {
         const mineName = document.getElementById('mineName').value;
@@ -166,7 +166,7 @@ async function storeData() {
 
         console.log('Transaction completed:', transaction);
 
-        // FIX: Hata diya 'result' class jisse wo gayab ho raha tha! Aur naya premium design daal diya
+        // Premium success message without 'result' class conflict
         resultDiv.innerHTML = `
             <div class="success" style="padding: 20px; border-radius: 8px; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981;">
                 <h3 style="color: #10b981; margin-bottom: 15px;"><i class="fas fa-check-circle"></i> Data Stored on Blockchain Successfully!</h3>
@@ -226,7 +226,7 @@ async function storeData() {
     }
 }
 
-// Improved retrieveData with better error handling
+// Improved retrieveData with premium styling
 async function retrieveData() {
     const hash = document.getElementById('retrieveHash').value.trim();
     const resultDiv = document.getElementById('retrievalResult');
@@ -284,6 +284,7 @@ async function retrieveData() {
                 </div>
             </div>
         `;
+        resultDiv.style.display = 'block';
 
         showNotification('Data retrieved successfully!', 'success');
 
@@ -295,6 +296,7 @@ async function retrieveData() {
                 <p>${error.message}</p>
             </div>
         `;
+        resultDiv.style.display = 'block';
         showNotification('Error retrieving data', 'error');
     }
 }
@@ -469,7 +471,6 @@ function showSection(sectionId) {
     const activeSection = document.getElementById(sectionId);
     if (activeSection) {
         activeSection.classList.add('active');
-        // Yahan se 'flex' hata kar 'block' kar diya hai taaki sab ek ke niche ek aayein!
         activeSection.style.display = 'block'; 
     }
     window.scrollTo(0, 0);
@@ -572,6 +573,6 @@ window.addEventListener('load', function() {
         logo.addEventListener('click', () => showSection('home'));
     }
 
-    // 6. PARTICLE EFFECT START KARO (Ye line sabse zaruri hai)
+    // 6. PARTICLE EFFECT START KARO
     initParticles();
 });
