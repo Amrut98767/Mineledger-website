@@ -183,7 +183,7 @@ p { color: var(--text-muted); }
 }
 
 .nav-container {
-    max-width: 1200px;
+    max-width: 95%; 
     margin: 0 auto;
     padding: 0 20px;
     display: flex;
@@ -205,18 +205,20 @@ p { color: var(--text-muted); }
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: 35px; /* Ye gap bada kar diya hai taaki chipke nahi */
+    gap: 25px; /* Menu items ke beech thoda gap badha diya */
     align-items: center;
 }
 
+/* Data Submission ko tootne se rokne ke liye */
 .nav-menu a {
     text-decoration: none;
     color: var(--text-main);
     font-weight: 500;
-    font-size: 1.05rem; /* Text thoda sa bada kiya hai */
+    font-size: 1rem;
     padding: 8px 12px;
     border-radius: 6px;
     transition: all 0.3s;
+    white-space: nowrap; /* 🔥 Ye trick kisi bhi word ko niche line me girne nahi degi */
 }
 .nav-menu a:hover { color: var(--primary); background: var(--border); }
 
