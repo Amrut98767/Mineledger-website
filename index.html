@@ -71,40 +71,83 @@
 
     <main class="main-content">
         
-        <section id="home" class="hero-silencio content-section active">
+        <div id="home" class="content-section active">
             
-            <div id="particles-js" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"></div>
-
-            <div class="glow-orb orb-1"></div>
-            <div class="glow-orb orb-2"></div>
-            <div class="glow-orb orb-3"></div>
-            
-            <div class="hero-content-wrapper">
-                <div class="hero-badge">Web3 Mining Infrastructure</div>
-                <h1 class="hero-title-new">Decentralized Storage System for the <br><span class="gradient-text">Mining Industry</span></h1>
-                <p class="hero-subtitle-new">Enterprise-grade, secure, and immutable blockchain solutions for modern mining operations.</p>
+            <section class="hero-silencio">
+                <div id="particles-js" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"></div>
+                <div class="glow-orb orb-1"></div>
+                <div class="glow-orb orb-2"></div>
+                <div class="glow-orb orb-3"></div>
                 
-                <div class="hero-action-buttons">
-                    <button class="btn-primary-glow" onclick="showSection('dataSubmission')">Get Started</button>
-                    <button class="btn-outline" onclick="showSection('dashboard')">View Network</button>
-                </div>
+                <div class="hero-content-wrapper">
+                    <div class="hero-badge">Web3 Mining Infrastructure</div>
+                    <h1 class="hero-title-new">Decentralized Storage System for the <br><span class="gradient-text">Mining Industry</span></h1>
+                    <p class="hero-subtitle-new">Enterprise-grade, secure, and immutable blockchain solutions for modern mining operations.</p>
+                    
+                    <div class="hero-action-buttons">
+                        <button class="btn-primary-glow" onclick="showSection('dataSubmission')">Get Started</button>
+                        <button class="btn-outline" onclick="showSection('dashboard')">View Network</button>
+                    </div>
 
-                <div class="silencio-stats">
-                    <div class="s-stat">
-                        <h4>100%</h4>
-                        <p>Immutable</p>
-                    </div>
-                    <div class="s-stat">
-                        <h4>24/7</h4>
-                        <p>Uptime</p>
-                    </div>
-                    <div class="s-stat">
-                        <h4>Zero</h4>
-                        <p>Data Loss</p>
+                    <div class="silencio-stats">
+                        <div class="s-stat"><h4>100%</h4><p>Immutable</p></div>
+                        <div class="s-stat"><h4>24/7</h4><p>Uptime</p></div>
+                        <div class="s-stat"><h4>Zero</h4><p>Data Loss</p></div>
                     </div>
                 </div>
+            </section>
+
+            <section class="info-section">
+                <div class="container">
+                    <div class="info-grid">
+                        <div class="info-text">
+                            <h2 class="gradient-text" style="font-size: 2.5rem; margin-bottom: 20px;">Why MineLedger?</h2>
+                            <p style="font-size: 1.1rem; margin-bottom: 15px;">Traditional mining operations rely on centralized databases which are vulnerable to data manipulation, loss, and unauthorized access.</p>
+                            <p style="font-size: 1.1rem;"><strong>MineLedger</strong> solves this by integrating cutting-edge Blockchain Technology with Mining Engineering. Every piece of ore data, grade report, and production metric is cryptographically hashed and stored on a decentralized network, ensuring total transparency and trust.</p>
+                        </div>
+                        <div class="info-cards">
+                            <div class="i-card">
+                                <i class="fas fa-shield-alt"></i>
+                                <h3>Tamper-Proof</h3>
+                                <p>Once data is recorded, it cannot be altered or deleted.</p>
+                            </div>
+                            <div class="i-card">
+                                <i class="fas fa-link"></i>
+                                <h3>Decentralized</h3>
+                                <p>No single point of failure in the data storage architecture.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="works-section">
+                <div class="container">
+                    <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 50px;">How It <span class="gradient-text">Works</span></h2>
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-number">01</div>
+                            <i class="fas fa-file-signature"></i>
+                            <h3>Data Entry</h3>
+                            <p>Authorized personnel input mine production, ore grade, and quantity data securely.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">02</div>
+                            <i class="fas fa-microchip"></i>
+                            <h3>Smart Contract</h3>
+                            <p>The system generates a unique cryptographic hash and verifies it via smart contracts.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">03</div>
+                            <i class="fas fa-cubes"></i>
+                            <h3>Immutable Ledger</h3>
+                            <p>Data is permanently written to the blockchain, accessible anytime for auditing.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             </div>
-        </section>
 
         <section id="dashboard" class="content-section">
             <div class="container">
