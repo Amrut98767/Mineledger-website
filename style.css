@@ -501,3 +501,30 @@ p { color: var(--text-muted); }
     margin-bottom: 15px;
     color: var(--text-main);
 }
+/* ==================== FINAL BOSS FIX (NEVER FAILS) ==================== */
+
+/* 1. Har section ko default hide karo (Forcefully) */
+.content-section {
+    display: none !important; 
+}
+
+/* 2. Sirf jispe 'active' class ho, wahi dikhega */
+.content-section.active {
+    display: block !important;
+}
+
+/* 3. Home page ki zidd khatam karne ke liye extra power */
+#home.content-section {
+    display: none !important;
+}
+#home.content-section.active {
+    display: block !important;
+}
+
+/* 4. Home ke andar ke chaaro sections ko ek-ke-niche-ek seedha karna */
+#home > section {
+    width: 100% !important;
+    display: block !important;
+    position: relative;
+    clear: both;
+}
