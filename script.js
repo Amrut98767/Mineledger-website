@@ -488,6 +488,51 @@ function initTeamAnimation() {
     scrollContainer.addEventListener('mouseleave', () => scrollTrack.style.animationPlayState = 'running');
 }
 
+// ==================== PREMIUM BLOCKCHAIN PARTICLES ====================
+function initParticles() {
+    if(typeof particlesJS === 'undefined') {
+        console.log("Particles.js load nahi hua!");
+        return;
+    }
+    particlesJS('particles-js', {
+        particles: {
+            number: { value: 60, density: { enable: true, value_area: 800 } },
+            color: { value: "#818cf8" },
+            shape: { type: "circle" },
+            opacity: { value: 0.4, random: false },
+            size: { value: 3, random: true },
+            line_linked: {
+                enable: true,
+                distance: 150,
+                color: "#818cf8",
+                opacity: 0.2,
+                width: 1.5
+            },
+            move: {
+                enable: true,
+                speed: 1.5,
+                direction: "none",
+                random: true,
+                straight: false,
+                out_mode: "out",
+                bounce: false
+            }
+        },
+        interactivity: {
+            detect_on: "canvas",
+            events: {
+                onhover: { enable: true, mode: "grab" },
+                onclick: { enable: true, mode: "push" },
+                resize: true
+            },
+            modes: {
+                grab: { distance: 180, line_linked: { opacity: 0.6 } }
+            }
+        },
+        retina_detect: true
+    });
+}
+
 // ==================== INITIALIZATION ====================
 window.addEventListener('load', function() {
     // 1. Check saved Dark Mode Theme
@@ -522,4 +567,7 @@ window.addEventListener('load', function() {
         logo.style.cursor = 'pointer';
         logo.addEventListener('click', () => showSection('home'));
     }
+
+    // 6. PARTICLE EFFECT START KARO (Ye line sabse zaruri hai)
+    initParticles();
 });
