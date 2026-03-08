@@ -15,7 +15,7 @@
 
     <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-logo">
+            <div class="nav-logo" onclick="showSection('home')" style="cursor: pointer;">
                 <i class="fas fa-mountain"></i>
                 <span>MineLedger</span>
             </div>
@@ -23,16 +23,8 @@
             <ul class="nav-menu">
                 <li><a href="#" onclick="showSection('home')">Home</a></li>
                 <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
-                <li><a href="#" onclick="showSection('dataSubmission')">Data Submission</a></li>
-                <li><a href="#" onclick="showSection('dataReview')">Data Review</a></li>
-                <li><a href="#" onclick="showSection('transactionHistory')">Transaction History</a></li>
-                <li class="dropdown">
-                    <a href="#">More <i class="fas fa-chevron-down"></i></a>
-                    <div class="dropdown-content">
-                        <a href="#" onclick="showSection('ipfsStorage')">IPFS Storage <span class="coming-soon">Coming Soon</span></a>
-                        <a href="#" onclick="showSection('billPayment')">Bill Payment <span class="coming-soon">Coming Soon</span></a>
-                    </div>
-                </li>
+                <li><a href="#" onclick="showSection('workspace')" style="color: var(--primary); font-weight: 600;"><i class="fas fa-th-large"></i> Workspace</a></li>
+                
                 <li>
                     <button id="themeToggle" class="btn-icon" onclick="toggleTheme()">
                         <i class="fas fa-moon"></i>
@@ -59,9 +51,7 @@
         <div class="mobile-menu" id="mobileMenu">
             <a href="#" onclick="showSection('home'); toggleMobileMenu();">Home</a>
             <a href="#" onclick="showSection('dashboard'); toggleMobileMenu();">Dashboard</a>
-            <a href="#" onclick="showSection('dataSubmission'); toggleMobileMenu();">Data Submission</a>
-            <a href="#" onclick="showSection('dataReview'); toggleMobileMenu();">Data Review</a>
-            <a href="#" onclick="showSection('transactionHistory'); toggleMobileMenu();">Transaction History</a>
+            <a href="#" onclick="showSection('workspace'); toggleMobileMenu();">Workspace</a>
         </div>
     </nav>
 
@@ -81,7 +71,7 @@
                     <p class="hero-subtitle-new">Enterprise-grade, secure, and immutable blockchain solutions for modern mining operations.</p>
                     
                     <div class="hero-action-buttons">
-                        <button class="btn-primary-glow" onclick="showSection('dataSubmission')">Get Started</button>
+                        <button class="btn-primary-glow" onclick="showSection('workspace')">Get Started</button>
                         <button class="btn-outline" onclick="showSection('dashboard')">View Network</button>
                     </div>
 
@@ -168,6 +158,7 @@
                 </div>
             </section>
         </div>
+
         <section id="dashboard" class="content-section">
             <div class="container">
                 <div class="section-header">
@@ -197,14 +188,8 @@
                 <div class="quick-actions">
                     <h2>Quick Actions</h2>
                     <div class="action-buttons">
-                        <button class="action-btn" onclick="showSection('dataSubmission')">
-                            <i class="fas fa-upload"></i><span>Submit New Data</span>
-                        </button>
-                        <button class="action-btn" onclick="showSection('dataReview')">
-                            <i class="fas fa-search"></i><span>Review Data</span>
-                        </button>
-                        <button class="action-btn" onclick="showSection('transactionHistory')">
-                            <i class="fas fa-history"></i><span>View History</span>
+                        <button class="action-btn" onclick="showSection('workspace')">
+                            <i class="fas fa-upload"></i><span>Enter Workspace</span>
                         </button>
                     </div>
                 </div>
@@ -221,8 +206,45 @@
             </div>
         </section>
 
+        <section id="workspace" class="content-section">
+            <div class="container">
+                <div class="section-header">
+                    <h1>Enterprise Workspace</h1>
+                    <p>Select a module to manage your mining operations and documents</p>
+                </div>
+                
+                <div class="workspace-grid">
+                    <div class="workspace-card" onclick="showSection('dataSubmission')">
+                        <i class="fas fa-file-signature" style="font-size: 3rem; color: #3b82f6; margin-bottom: 15px;"></i>
+                        <h3>Production Ledger</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 10px;">Submit numerical data (Ore Grade, Quantity) to the blockchain.</p>
+                    </div>
+
+                    <div class="workspace-card" onclick="showSection('dataReview')">
+                        <i class="fas fa-search-location" style="font-size: 3rem; color: #10b981; margin-bottom: 15px;"></i>
+                        <h3>Ledger Verification</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 10px;">Verify previously stored numerical data using its Hash.</p>
+                    </div>
+
+                    <div class="workspace-card" onclick="showSection('ipfsStorage')" style="position: relative;">
+                        <span style="position: absolute; top: 10px; right: 10px; background: #818cf8; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem;">New</span>
+                        <i class="fas fa-file-pdf" style="font-size: 3rem; color: #818cf8; margin-bottom: 15px;"></i>
+                        <h3>IPFS Document Vault</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 10px;">Upload and retrieve site photos, PDFs, and reports.</p>
+                    </div>
+
+                    <div class="workspace-card" onclick="showSection('transactionHistory')">
+                        <i class="fas fa-history" style="font-size: 3rem; color: #f59e0b; margin-bottom: 15px;"></i>
+                        <h3>Transaction History</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 10px;">View a complete log of all your blockchain activities.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="dataSubmission" class="content-section">
             <div class="container">
+                <button onclick="showSection('workspace')" class="btn-outline" style="margin-bottom: 20px;"><i class="fas fa-arrow-left"></i> Back to Workspace</button>
                 <div class="section-header">
                     <h1>Submit Mining Data</h1>
                     <p>Store your mining data securely on the blockchain</p>
@@ -280,6 +302,7 @@
 
         <section id="dataReview" class="content-section">
             <div class="container">
+                <button onclick="showSection('workspace')" class="btn-outline" style="margin-bottom: 20px;"><i class="fas fa-arrow-left"></i> Back to Workspace</button>
                 <div class="section-header">
                     <h1>Review Mining Data</h1>
                     <p>Retrieve and verify your stored mining data using data hash</p>
@@ -301,6 +324,7 @@
 
         <section id="transactionHistory" class="content-section">
             <div class="container">
+                <button onclick="showSection('workspace')" class="btn-outline" style="margin-bottom: 20px;"><i class="fas fa-arrow-left"></i> Back to Workspace</button>
                 <div class="section-header">
                     <h1>Transaction History</h1>
                     <p>View all your blockchain transactions and access stored data</p>
@@ -342,16 +366,35 @@
 
         <section id="ipfsStorage" class="content-section">
             <div class="container">
+                <button onclick="showSection('workspace')" class="btn-outline" style="margin-bottom: 20px;"><i class="fas fa-arrow-left"></i> Back to Workspace</button>
                 <div class="section-header">
-                    <h1>IPFS Storage</h1>
-                    <p>Decentralized file storage coming soon</p>
+                    <h1>IPFS Document Vault</h1>
+                    <p>Securely store and retrieve site images and reports on decentralized storage</p>
                 </div>
-                <div class="coming-soon-section">
-                    <i class="fas fa-tools"></i>
-                    <h2>Feature Under Development</h2>
-                    <div class="progress-container">
-                        <div class="progress-bar"><div class="progress-fill" style="width: 45%"></div></div>
-                        <span>45% Complete</span>
+                
+                <div class="form-container">
+                    <div style="margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--border-color);">
+                        <h2 style="font-size: 1.5rem; margin-bottom: 15px;"><i class="fas fa-cloud-upload-alt" style="color: #818cf8;"></i> Upload Document</h2>
+                        <div class="form-group">
+                            <input type="file" id="ipfsFileInput" style="width: 100%; padding: 15px; border: 2px dashed var(--primary); border-radius: 8px; background: var(--bg-main); color: var(--text-main);">
+                        </div>
+                        <button class="btn-primary full-width" style="margin-top: 10px;">
+                            <i class="fas fa-lock"></i> Upload & Get Hash
+                        </button>
+                    </div>
+
+                    <div>
+                        <h2 style="font-size: 1.5rem; margin-bottom: 15px;"><i class="fas fa-search" style="color: #10b981;"></i> Retrieve Document</h2>
+                        <div class="form-group">
+                            <input type="text" id="ipfsRetrieveHash" placeholder="Enter your Document Hash (Qm...)" style="width: 100%;">
+                        </div>
+                        <button class="btn-outline full-width" style="margin-top: 10px;">
+                            <i class="fas fa-eye"></i> View Document
+                        </button>
+                        
+                        <div id="ipfsViewer" style="margin-top: 20px; display: none; text-align: center; background: var(--bg-main); padding: 15px; border-radius: 8px;">
+                            <img src="" id="ipfsImagePreview" style="max-width: 100%; border-radius: 6px; display: none;">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -359,6 +402,7 @@
 
         <section id="billPayment" class="content-section">
             <div class="container">
+                <button onclick="showSection('workspace')" class="btn-outline" style="margin-bottom: 20px;"><i class="fas fa-arrow-left"></i> Back to Workspace</button>
                 <div class="section-header">
                     <h1>Bill Payment</h1>
                     <p>Secure payment processing coming soon</p>
