@@ -586,3 +586,83 @@ window.addEventListener('load', function() {
     // 6. PARTICLE EFFECT START KARO
     initParticles();
 });
+/* ==================== IPFS FILE UPLOAD SYSTEM (PINATA) ==================== */
+async function uploadToIPFS() {
+    const fileInput = document.getElementById('ipfsFileInput');
+    const file = fileInput.files[0];
+
+    // Check agar user ne file select nahi ki hai
+    if (!file) {
+        alert("Please select a document or image to upload.");
+        return;
+    }
+
+    // ⚠️ APNI PINATA KEYS YAHAN PASTE KARO ⚠️
+    const pinataApiKey = "dc695fbb31555f1faa3d";
+    const pinataSecretApiKey = "a9f3d099bd8832f96f15109f9ef7f764aa4a0cb3d167cec6a1e8ae04736cb69a";
+
+    const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
+
+    // File ko package (FormData) me convert karna API ke liye
+    let data = new FormData();
+    data.append('file', file);
+
+    // Metadata add kar rahe hain taaki Pinata dashboard me file ka naam dikhe
+    const metadata = JSON.stringify({
+        name: file.name
+    });
+    data.append('pinataMetadata', metadata);
+
+    // User ko loading state dikhana (button ka text change karke)
+    const uploadBtn = document.querySelector('#ipfsStorage .btn-primary');
+    const originalBtnText = uploadBtn.innerHTML;
+    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading to IPFS...';
+    uploadBtn.disabled = true;
+
+    try {
+        // Pinata server par file bhejna
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'pinata_api_key': pinataApiKey,
+                'pinata_secret_api_key': pinataSecretApiKey
+            },
+            body: data
+        });
+
+        const result = await response.json();
+        
+        // Agar upload successful ho gaya
+        if (result.IpfsHash) {
+            // Screen par Hash display karne ke liye naya div banate hain
+            let resultDiv = document.getElementById('ipfsUploadResult');
+            if (!resultDiv) {
+                resultDiv = document.createElement('div');
+                resultDiv.id = 'ipfsUploadResult';
+                resultDiv.className = 'result success';
+                resultDiv.style.marginTop = '15px';
+                resultDiv.style.wordBreak = 'break-all';
+                fileInput.parentElement.parentElement.appendChild(resultDiv);
+            }
+            
+            resultDiv.innerHTML = `
+                <strong><i class="fas fa-check-circle"></i> Upload Successful!</strong><br>
+                Your Data Hash (CID): <br>
+                <span style="color: var(--primary); font-family: monospace; font-size: 1.1rem; user-select: all;">${result.IpfsHash}</span>
+                <p style="font-size: 0.8rem; margin-top: 5px; color: var(--text-muted);">Please copy and save this hash to retrieve your file later.</p>
+            `;
+            
+            // File input clear kar do
+            fileInput.value = '';
+        } else {
+            alert("Upload failed! Error: " + (result.error || "Unknown Error"));
+        }
+    } catch (error) {
+        console.error("IPFS Upload Error:", error);
+        alert("Network Error! Console check karo.");
+    } finally {
+        // Button ko wapas normal kar do
+        uploadBtn.innerHTML = originalBtnText;
+        uploadBtn.disabled = false;
+    }
+}
