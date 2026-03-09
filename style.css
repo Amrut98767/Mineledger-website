@@ -568,3 +568,21 @@ p { color: var(--text-muted); }
 [data-theme="dark"] .workspace-card:hover {
     box-shadow: 0 12px 24px rgba(0,0,0,0.6);
 }
+/* ==================== 1. MOBILE VIEW FIX FOR WORKSPACE CARDS ==================== */
+@media (max-width: 768px) {
+    .workspace-card {
+        padding: 20px 15px; /* Mobile par box thoda chota aur smart dikhega */
+    }
+    .workspace-card h3 {
+        font-size: 1.2rem; /* Heading thodi adjust ki */
+    }
+    .workspace-card i {
+        font-size: 2.2rem !important; /* Icon ka size mobile ke hisaab se set kiya */
+    }
+}
+
+/* ==================== 2. NAVBAR ACTIVE STATE DESIGN ==================== */
+.nav-menu a.active-nav, .mobile-menu a.active-nav {
+    color: var(--primary) !important;
+    font-weight: 700;
+}
