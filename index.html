@@ -453,10 +453,25 @@
                 targetSection.style.display = 'block';
                 targetSection.classList.add('active');
             }
+
+            // 3. NAYA KAM: Navbar me jis page par hain, usko highlight karo
+            const navLinks = document.querySelectorAll('.nav-menu a, .mobile-menu a');
+            navLinks.forEach(link => {
+                link.classList.remove('active-nav'); // Sabse pehle sabka color normal karo
+                // Agar menu ke link me current section ka naam hai, toh use highlight (active) kardo
+                if(link.getAttribute('onclick') && link.getAttribute('onclick').includes(sectionId)) {
+                    link.classList.add('active-nav'); 
+                }
+            });
             
-            // 3. Page ko top par scroll kar do
+            // 4. Page ko top par scroll kar do
             window.scrollTo(0, 0);
         };
+
+        // Page load hone par default 'home' ko active dikhane ke liye
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('home');
+        });
     </script>
 </body>
 </html>
