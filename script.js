@@ -586,39 +586,34 @@ window.addEventListener('load', function() {
     // 6. PARTICLE EFFECT START KARO
     initParticles();
 });
-/* ==================== IPFS UPLOAD (DETECTIVE VERSION) ==================== */
+/* ==================== IPFS FILE UPLOAD SYSTEM (PINATA) ==================== */
 async function uploadToIPFS() {
-    alert("Step 1: Button clicked successfully!"); // First checkpoint
-
     const fileInput = document.getElementById('ipfsFileInput');
     const file = fileInput.files[0];
 
     if (!file) {
-        alert("Error: No file selected.");
+        alert("Please select a document or image to upload.");
         return;
     }
 
-    alert("Step 2: File detected -> " + file.name); // Second checkpoint
-
-    // ⚠️ DO NOT FORGET TO ADD YOUR ACTUAL KEYS HERE ⚠️
+    // Tumhari Asli Pinata Keys
     const pinataApiKey = "dc695fbb31555f1faa3d";
     const pinataSecretApiKey = "a9f3d099bd8832f96f15109f9ef7f764aa4a0cb3d167cec6a1e8ae04736cb69a";
 
-    if(pinataApiKey === "dc695fbb31555f1faa3d") {
-        alert("Wait! You haven't pasted your actual Pinata API key!");
-        return;
-    }
-
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
+
     let data = new FormData();
     data.append('file', file);
 
+    const metadata = JSON.stringify({
+        name: file.name
+    });
+    data.append('pinataMetadata', metadata);
+
     const uploadBtn = document.querySelector('#ipfsStorage .btn-primary');
     const originalBtnText = uploadBtn.innerHTML;
-    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading to IPFS...';
     uploadBtn.disabled = true;
-
-    alert("Step 3: Sending request to Pinata server..."); // Third checkpoint
 
     try {
         const response = await fetch(url, {
@@ -630,14 +625,9 @@ async function uploadToIPFS() {
             body: data
         });
 
-        alert("Step 4: Received response from Pinata! Status Code: " + response.status); // Fourth checkpoint
-        
         const result = await response.json();
         
         if (response.ok && result.IpfsHash) {
-            alert("Step 5: SUCCESS! Hash generated: " + result.IpfsHash);
-            
-            // Code to display the result on screen
             let resultDiv = document.getElementById('ipfsUploadResult');
             if (!resultDiv) {
                 resultDiv = document.createElement('div');
@@ -647,16 +637,55 @@ async function uploadToIPFS() {
                 resultDiv.style.wordBreak = 'break-all';
                 fileInput.parentElement.parentElement.appendChild(resultDiv);
             }
-            resultDiv.innerHTML = `<strong>Success!</strong><br>Hash: ${result.IpfsHash}`;
             
+            resultDiv.innerHTML = `
+                <strong><i class="fas fa-check-circle"></i> Upload Successful!</strong><br>
+                Your Data Hash (CID): <br>
+                <span style="color: var(--primary); font-family: monospace; font-size: 1.1rem; user-select: all;">${result.IpfsHash}</span>
+                <p style="font-size: 0.8rem; margin-top: 5px; color: var(--text-muted);">Please copy and save this hash to retrieve your file later.</p>
+            `;
+            fileInput.value = '';
         } else {
-            alert("Step 5 (Failed): Pinata returned an error -> " + JSON.stringify(result));
+            alert("Upload failed! Error: " + (result.error || "Unknown Error"));
         }
     } catch (error) {
-        alert("CRASH: Network Error! -> " + error.message); // If network request gets blocked
+        console.error("IPFS Upload Error:", error);
+        alert("Network Error! Please check your connection.");
     } finally {
         uploadBtn.innerHTML = originalBtnText;
         uploadBtn.disabled = false;
-        alert("Step 6: Process completed, button reset to normal.");
     }
+}
+
+/* ==================== IPFS FILE RETRIEVE SYSTEM ==================== */
+function retrieveFromIPFS() {
+    const hashInput = document.getElementById('ipfsRetrieveHash').value.trim();
+
+    if (!hashInput) {
+        alert("Please enter a valid IPFS Hash (CID).");
+        return;
+    }
+
+    const gatewayUrl = `https://gateway.pinata.cloud/ipfs/${hashInput}`;
+
+    const viewerDiv = document.getElementById('ipfsViewer');
+    const imgPreview = document.getElementById('ipfsImagePreview');
+
+    imgPreview.src = gatewayUrl;
+    imgPreview.style.display = 'block';
+
+    let openBtn = document.getElementById('ipfsOpenBtn');
+    if (!openBtn) {
+        openBtn = document.createElement('a');
+        openBtn.id = 'ipfsOpenBtn';
+        openBtn.className = 'btn-outline';
+        openBtn.style.display = 'inline-block';
+        openBtn.style.marginTop = '15px';
+        openBtn.target = '_blank'; 
+        openBtn.innerHTML = '<i class="fas fa-external-link-alt"></i> Open Full Document';
+        viewerDiv.appendChild(openBtn);
+    }
+    
+    openBtn.href = gatewayUrl;
+    viewerDiv.style.display = 'block';
 }
