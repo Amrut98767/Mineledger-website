@@ -586,33 +586,34 @@ window.addEventListener('load', function() {
     // 6. PARTICLE EFFECT START KARO
     initParticles();
 });
-/* ==================== IPFS FILE UPLOAD SYSTEM (PINATA) ==================== */
+/* ==================== BULLETPROOF IPFS UPLOAD ==================== */
 async function uploadToIPFS() {
     const fileInput = document.getElementById('ipfsFileInput');
-    const file = fileInput.files[0];
-
-    if (!file) {
-        alert("Please select a document or image to upload.");
+    if (!fileInput) {
+        alert("ERROR: HTML me 'ipfsFileInput' ID nahi mil rahi hai!");
         return;
     }
 
-    // Tumhari Asli Pinata Keys
+    const file = fileInput.files[0];
+    if (!file) {
+        alert("Please select a file first.");
+        return;
+    }
+
+    // Tumhari API Keys
     const pinataApiKey = "dc695fbb31555f1faa3d";
     const pinataSecretApiKey = "a9f3d099bd8832f96f15109f9ef7f764aa4a0cb3d167cec6a1e8ae04736cb69a";
-
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 
     let data = new FormData();
     data.append('file', file);
-
-    const metadata = JSON.stringify({
-        name: file.name
-    });
-    data.append('pinataMetadata', metadata);
+    data.append('pinataMetadata', JSON.stringify({ name: file.name }));
 
     const uploadBtn = document.querySelector('#ipfsStorage .btn-primary');
     const originalBtnText = uploadBtn.innerHTML;
-    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading to IPFS...';
+    
+    // Button par loading ghumao
+    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
     uploadBtn.disabled = true;
 
     try {
@@ -625,9 +626,19 @@ async function uploadToIPFS() {
             body: data
         });
 
+        // 🚨 MAIN CHECK: Agar Pinata reject karega, toh yahan screen par error aayega!
+        if (!response.ok) {
+            const errorReason = await response.text();
+            alert(`API REJECTED!\nStatus: ${response.status}\nReason: ${errorReason}`);
+            return; 
+        }
+
         const result = await response.json();
         
-        if (response.ok && result.IpfsHash) {
+        // Agar upload pass ho gaya
+        if (result.IpfsHash) {
+            alert("SUCCESS! File Uploaded."); 
+            
             let resultDiv = document.getElementById('ipfsUploadResult');
             if (!resultDiv) {
                 resultDiv = document.createElement('div');
@@ -638,19 +649,10 @@ async function uploadToIPFS() {
                 fileInput.parentElement.parentElement.appendChild(resultDiv);
             }
             
-            resultDiv.innerHTML = `
-                <strong><i class="fas fa-check-circle"></i> Upload Successful!</strong><br>
-                Your Data Hash (CID): <br>
-                <span style="color: var(--primary); font-family: monospace; font-size: 1.1rem; user-select: all;">${result.IpfsHash}</span>
-                <p style="font-size: 0.8rem; margin-top: 5px; color: var(--text-muted);">Please copy and save this hash to retrieve your file later.</p>
-            `;
-            fileInput.value = '';
-        } else {
-            alert("Upload failed! Error: " + (result.error || "Unknown Error"));
+            resultDiv.innerHTML = `<strong>Success!</strong><br>Hash (CID): <span style="color:var(--primary);">${result.IpfsHash}</span>`;
         }
     } catch (error) {
-        console.error("IPFS Upload Error:", error);
-        alert("Network Error! Please check your connection.");
+        alert("NETWORK ERROR: " + error.message);
     } finally {
         uploadBtn.innerHTML = originalBtnText;
         uploadBtn.disabled = false;
